@@ -1,0 +1,18 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class ItemsImportController extends Controller
+{
+    public function index()
+    {
+        return view('admin.sync-item.index'); // matches your blade path
+    }
+
+    public function upload(Request $request)
+    {
+        return back()->with('success', 'Items uploaded successfully (demo)');
+    }
+}

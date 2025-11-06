@@ -1,0 +1,2 @@
+[02-Jan-2025 17:24:56 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 8.0.30. in /home/freedpka/pos2.freelancedemo.site/vendor/composer/platform_check.php on line 24
+[02-Jan-2025 17:33:27 UTC] PHP Fatal error:  Composer detected issues in your platform: Your Composer dependencies require a PHP version ">= 8.1.0". You are running 8.0.30. in /home/freedpka/pos2.freelancedemo.site/vendor/composer/platform_check.php on line 24
