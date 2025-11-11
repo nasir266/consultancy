@@ -56,10 +56,11 @@ class ItemInvoice extends Model
     ];
 
     public function item_invoice_lists(){
-        return $this->hasMany(ItemInvoiceList::class);
+        return $this->hasMany(ItemInvoiceList::class, 'item_invoice_id', 'id');
+        //return $this->hasMany(ItemInvoiceList::class);
     }
 
     public function godown(){
-        return $this->belongsTo(Godown::class);
+        return $this->belongsTo(Godown::class, 'godown_id', 'id');
     }
 }

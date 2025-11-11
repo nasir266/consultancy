@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\ItemInvoice;
 use App\Models\ItemInvoiceList;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Session;
 
@@ -115,5 +117,33 @@ class ItemInvoiceController extends Controller
             Session::flash("error",$e->getMessage());
             return redirect("/employee-types/add");
         }
+    }
+
+
+    public function addComment(Request $request)
+    {
+
+        //  return $request->all();
+        if($request->ud_check != 'update'){
+            DB::table('item_invoices')
+                ->where('id', $request->ud_invoice_id)
+                ->update([
+                    'status' => 1
+                ]);
+        }
+
+        DB::table('invoice_comment')->insert([
+            'comment'    => $request->ud_comment,
+            'type'       => $request->ud_type,
+            'invoice_id'     => $request->ud_invoice_id,
+            'invoice'     => $request->ud_invoice,
+            'added_by'   => Auth::user()->id,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+
+        Session::flash("success","comment Added Successfuly!");
+        return response()->json(['success' => true], 201);
     }
 }

@@ -51,6 +51,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get("search_items",[ItemController::class,"search"])->name("items.search");
     Route::post("item/add",[ItemController::class,"add"])->name("item.post");
     Route::post("item_invoice/add",[ItemInvoiceController::class,"add"])->name("item.invoice.post");
+    Route::post("/addComment",[ItemInvoiceController::class,"addComment"])->name("addComment");
+
 
 // ==================== AJAX ====================
     Route::get('ajax/get_areas/{city}', [AjaxController::class, 'get_areas']);

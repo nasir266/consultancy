@@ -1,5 +1,6 @@
 @extends('layouts.master')
 @section('styles')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
         .disabled {
             cursor: not-allowed;
@@ -1126,6 +1127,7 @@
           <button
             class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
             type="button"
+            onclick="openModal(event, 'update-model')"
           >
             <i data-feather="trash-2" class="w-4 h-4 mr-3"></i>
             Delete
@@ -1410,8 +1412,73 @@
     </div>
 </div>
 
+
+
+
+{{--delete and update model--}}
+<div
+    id="update-model"
+    class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0 model"
+>
+    <div
+        class="bg-white rounded-lg shadow-lg w-full max-w-[700px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
+        style="scrollbar-width: none"
+    >
+        <form  class="block mb-7 space-y-5" id="comment_form"  method="POST">
+        <div class="text-gray-700">
+
+            <div class="d-flex">
+                <h3 class="text-gray-600 text-xl font-medium mb-6">Comment Model</h3>
+                <div class="popup_close">
+                    <i class="fas fa-close" onclick="closeModal(event, 'update-model')"></i>
+                </div>
+            </div>
+
+                <div class="flex flex-col gap-1">
+                    <label for="search-item" class="text-gray-600 font-medium"
+                    >Comment</label
+                    >
+                    @csrf
+                    <input type="hidden" name="ud_check" id="ud_check" value="">
+                    <input type="hidden" name="ud_invoice_id" id="ud_invoice_id" value="">
+                    <input type="hidden" name="ud_invoice" value="purchase_invoice">
+                    <input type="hidden" name="ud_type" id="ud_type" value="delete">
+                    <textarea
+                        class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1.5 rounded-md search-input"
+                        name="ud_comment"
+                        id="ud_comment"
+                        rows="6"
+                    ></textarea>
+
+                </div>
+
+
+        </div>
+        <div class="flex items-center gap-3 justify-end text-sm mt-14">
+
+            <button
+                class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                type="submit"
+            >
+                <i data-feather="save" class="w-4 h-4 mr-3"></i>
+                <span id="comment_save"> Save</span>
+            </button>
+
+            <button
+                class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
+                type="button"
+                onclick="closeModal(event, 'update-model')"
+            >
+                Close
+            </button>
+        </div>
+        </form>
+    </div>
+</div>
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
     const input = document.getElementById('search');
     const table = document.getElementById('searchTable');
     const rows = table.getElementsByTagName('tr');
@@ -1431,20 +1498,67 @@
         }
     });
 </script>
-{{--<script>
-    document.getElementById("search").addEventListener("keyup", function() {
-        //window.alert('g');
-        const filter = this.value.toLowerCase();
-        const rows = document.querySelectorAll("#searchTable tr");
+<script>
+    // ensure meta tag exists: <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        rows.forEach(row => {
-            const text = row.textContent.toLowerCase();
-            row.style.display = text.includes(filter) ? "" : "none";
+
+
+
+    $('#comment_form').on('submit', function(e) {
+        //window.alert('ff');
+        e.preventDefault();
+        var ud_check = $('#ud_check').val;
+        if(ud_check == 'update'){
+            save_invoice();
+        }
+
+        $("#comment_save").attr("disabled", true);
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: "{{ route('addComment') }}",
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+
+            success: function(response) {
+                console.log(response);
+                $("#comment_save").text("Reloading");
+                $("#comment_save").attr("disabled", false);
+
+                $("#up_comment").val('');
+                closeModal(event, 'update-model');
+                toastr.success('Comment Added Successfully!', 'Success', {
+                    timeOut: 600,
+                    onHidden: function() {
+                        location.reload();
+                    }
+                });
+            },
+
+            error: function(xhr) {
+                $("#comment_save").attr("disabled", false);
+
+                if (xhr.responseJSON && xhr.responseJSON.errors) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorHtml = '<ul>';
+
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+
+                    errorHtml += '</ul>';
+                    $('#response').html(errorHtml);
+                }
+            }
         });
     });
-</script>--}}
 
-<script>
+</script>
+
+    <script>
 
     jQuery(document).ready(function() {
         $("#party_name")[0].selectize.focus();
@@ -1927,6 +2041,37 @@
             // also reset serial counter
             serial = rows.length;
         }
+        function disableAllExceptOne(formId, exceptId) {
+            // Get form
+            let form = document.getElementById(formId);
+
+            // Get all input/select/textarea inside the form
+            let fields = form.querySelectorAll("input, select, textarea, button");
+
+            fields.forEach(function(field) {
+                // Disable all except the target field
+                if (field.id !== exceptId) {
+                    field.disabled = true;
+                    field.style.border = "2px solid red";
+                    field.style.backgroundColor = '#ffe5e5';
+                } else {
+                    field.disabled = false;
+                    field.style.border = "";
+                    field.style.backgroundColor = '';
+                }
+            });
+        }
+        function enableInvoiceForm(form_id) {
+            let form = document.getElementById(form_id);
+
+            let fields = form.querySelectorAll("input, select, textarea, button");
+
+            fields.forEach(function(field) {
+                field.disabled = false;
+                field.style.border = "";
+                field.style.backgroundColor = '';
+            });
+        }
         function get_invoice(value, type) {
             $.ajax({
                 url: "{{ route('ajax.pur_invoice.search') }}",
@@ -1937,11 +2082,18 @@
                     type: type,
                 },
                 success: function(response) {
-                   // console.log(response);
+                   console.log(response);
                     if (response) {
                         var data = response;
 
                         if (Object.keys(data).length > 0) {
+
+                            if(data.status === 1){
+                                disableAllExceptOne('invoice_form', 'bill_no');
+                            }else{
+                                enableInvoiceForm('invoice_form');
+                            }
+
                             $("#invoice_save").text("Update");
                         }else{
                             $("#invoice_save").text("Save");
@@ -1950,7 +2102,7 @@
                         get_id_party(data.party_id);
                         $('#party_id').val(data.party_id);
                         $("#party_name")[0].selectize.setValue(data.party_id);
-                        //$("#party_number")[0].selectize.setValue(data.party_id);
+                        $('#ud_invoice_id').val(data.id);
                         $("#salesman")[0].selectize.setValue(data.salesman);
                         $('#current_date').val(data.date);
                         $('#bill_no').val(data.bill_no);
@@ -1997,26 +2149,38 @@
                         var grand_tot = 0;
                         for (var i = 0; i < items.length; i++) {
                             var row = items[i];
-                            var party_discount = row.item.party_discount;
-                            var barcode = row.item.barcode;
-                            var partyItemCode = row.item.item_code;
-                            var description = row.item.description;
-                            var godown = data.godown.name;
-                            var packetQty = row.item.packet_qty;
-                            var piecesInPacket = row.item.pieces_in_packet;
-                            var totalPieces = row.item.total_pieces;
-                            var purchaseRate = row.item.purchase_rate;
-                            var partyLess = row.item.party_less;
-                            var margin_field = row.item.margin_field;
+                            if(row.party_discount === null){
+                                var dis = 0;
+                            }else{
+                                var dis = row.party_discount;
+                            }
+                            if(data.godown !== null){
+                                var godown = data.godown.name;
+                            }else{
+                                var godown = '';
+                            }
+                            var party_discount =dis;
+                            var barcode = row.barcode;
+                            var partyItemCode = row.item_code;
+                            var description = row.description;
+                            var godown = godown;
+                            var packetQty = row.packet_qty;
+                            var piecesInPacket = row.pieces_in_packet;
+                            var totalPieces = row.total_pieces;
+                            var purchaseRate = row.purchase_rate;
+                            var partyLess = row.party_less;
+                            var margin_field = row.margin_field;
                             var table_id = i + 1;
-                            var wholesale_profit = row.item.wholesale_profit;
-                            var parts = wholesale_profit.split(" | ");
-
+                            /*var wholesale_profit = row.wholesale_profit;
+                            var parts = wholesale_profit.split(" | ");*/
+                            if(party_discount === ''){
+                                party_discount = 0;
+                            }
                             var less = (((purchaseRate * party_discount) / 100) * totalPieces) + (partyLess * totalPieces);
                             var party_less_total = (partyLess * totalPieces);
                             var party_total_discount = (((purchaseRate * party_discount) / 100) * totalPieces);
 
-                            var id = row.item.id;
+                            var id = row.id;
                             party_discount_total = party_discount;
                             //console.log(row.total_less);
                             //console.log(row.amount);
@@ -2088,7 +2252,7 @@
                                 "<td><i onclick='deleteItemRow(this)' class='fas fa-trash text-danger del-icon'></i></td>" +
                                 "</tr>";
 
-
+                           // console.log(newRow);
                             $(".main-table tbody").append(newRow);
                             const tableContainer = document.getElementById('tableContainer');
                             tableContainer.scrollTop = tableContainer.scrollHeight;
@@ -2119,17 +2283,14 @@
                 }
             });
         }
-        $('#invoice_form').on('submit', function(e) {
+        /*$('#invoice_form').on('submit', function(e) {
+            let invoice_id = $("#invoice_id").val();
             e.preventDefault();
-
             let formData = new FormData(this);
 
-            //console.log(formData);
-            // Ensure selectize fields are included
             jQuery('.c_selectize').each(function() {
                 let name = jQuery(this).attr('name');
-                let value = jQuery(this).val(); // Get the selected value(s)
-
+                let value = jQuery(this).val();
                 if (value) {
                     if (Array.isArray(value)) {
                         value.forEach(val => formData.append(name, val));
@@ -2138,8 +2299,6 @@
                     }
                 }
             });
-            //console.log(formData);
-
 
             $("#invoice_save").text("Please wait...");
             $("#invoice_save").attr("disabled", true);
@@ -2171,6 +2330,73 @@
                     $('#response').html(errorHtml);
                 }
             });
+        });*/
+        $("#invoice_form").on("submit", function(event) {
+            event.preventDefault();
+        });
+
+        function save_invoice() {
+            let form = $("#invoice_form")[0];
+            let formData = new FormData(form);
+
+            jQuery('.c_selectize').each(function() {
+                let name = jQuery(this).attr('name');
+                let value = jQuery(this).val();
+                if (value) {
+                    if (Array.isArray(value)) {
+                        value.forEach(val => formData.append(name, val));
+                    } else {
+                        formData.append(name, value);
+                    }
+                }
+            });
+
+            $("#invoice_save").text("Please wait...");
+            $("#invoice_save").attr("disabled", true);
+
+            $.ajax({
+                url: "{{ route('purchase.invoice.post') }}",
+                method: 'POST',
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    //$("#invoice_id").val(response.id);
+
+                    $("#invoice_save").text("Reloading");
+                    $("#invoice_save").attr("disabled", false);
+                    toastr.success('Invoice Added Successfully!', 'Success', {
+                        timeOut: 600,
+                        onHidden: function() {
+                            location.reload();
+                        }
+                    });
+                },
+                error: function(xhr) {
+                    let errors = xhr.responseJSON.errors;
+                    let errorHtml = '<ul>';
+                    $.each(errors, function(key, value) {
+                        errorHtml += '<li>' + value[0] + '</li>';
+                    });
+                    errorHtml += '</ul>';
+                    $('#response').html(errorHtml);
+                }
+            });
+        }
+
+        $("#invoice_save").on("click", function () {
+
+            let invoice_id = $("#ud_invoice_id").val();  // hidden field
+            console.log(invoice_id);
+            if (!invoice_id) {
+                save_invoice();
+                return false;
+            } else {
+                $('#ud_check').val('update');
+                $('#ud_type').val('update');
+                openModal(event, 'update-model');
+                return false;
+            }
         });
         function get_id_party(value) {
             var name = value;
@@ -2183,7 +2409,7 @@
                     value: value,
                 },
                 success: function(response) {
-                    console.log(response);
+                    //console.log(response);
                     if (response) {
                         var data = response;
 
