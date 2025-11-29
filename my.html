@@ -1,51 +1,23 @@
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+"<td class='table_id'>" + (table_id ?? '-') + "</td>" +
+"<td>" + (rbarcode ?? '-') + "</td>" +
+"<td>" + (item_code ?? '-') + "</td>" +
+"<td>" + (description ?? '-') + "</td>" +
+"<td>" + ( godown_name) + "</td>" +
+"<td class='pkt_table' contenteditable='true' id='tableQty-"+table_id+"' oninput='tableCalc(this)'>" + (pktQty ?? '-') + "</td>" +
+"<td contenteditable='true' id='tablePkt-"+table_id+"' oninput='tableCalc(this)'>" + (pcsPkt ?? '-') + "</td>" +
+"<td class='piec_table' id='tablePcs-"+table_id+"'>" + (tPcs ?? '-') + "</td>" +
+"<td id='tablepRate-"+table_id+"'>" + (pRate ?? '-') + "</td>" +
+"<td class='amount_table' id='tableAmount-"+table_id+"'>" + (rAmount ?? '-') + "</td>" +
+"<td class='less_table' contenteditable='true' id='tableLess-"+table_id+"' oninput='tableCalc(this)'>" + (rLess ?? '-') + "</td>" +
+"<td class='disc_table' id='tableDisc-"+table_id+"'>" + (rDics ?? '-') + "</td>" +
+"<td id='tablelRate-"+table_id+"'>" + (lRate ?? '-') + "</td>" +
+"<td class='gamount_table' id='tablegAmount-"+table_id+"'>" + (gAmount ?? '-') + "</td>" +
+/*margin*/"<td class='tmargin_table'>" +margin_hidden+ "</td>" +
+/*total margin*/"<td class='total_margin_table'>" + t_margin + "</td>" +
+"<td class='total_less_table' id='tableTotalLess-"+table_id+"'>" + (g_total.toFixed(2) ?? '-') + "</td>" +
+"<td class='total_less_discount' id='tableTotalDisc-"+table_id+"'>" + (perAgeDis ?? '-') + "</td>" +
+"<td><i onclick='deleteItemRow(this)' class='fas fa-trash text-danger del-icon'></i></td>" +
+"</tr>";
 
-<div class="container mt-4">
-    <div class="row">
 
-        <!-- Vertical Tabs -->
-        <div class="col-md-3">
-            <div class="nav flex-column nav-pills" id="v-tabs" role="tablist">
 
-                <a class="nav-link active" id="tab-1-tab" data-toggle="pill" href="#tab-1" role="tab">
-                    Tab 1
-                </a>
-
-                <a class="nav-link" id="tab-2-tab" data-toggle="pill" href="#tab-2" role="tab">
-                    Tab 2
-                </a>
-
-                <a class="nav-link" id="tab-3-tab" data-toggle="pill" href="#tab-3" role="tab">
-                    Tab 3
-                </a>
-
-            </div>
-        </div>
-
-        <!-- Tab Content -->
-        <div class="col-md-9">
-            <div class="tab-content" id="v-tabs-content">
-
-                <div class="tab-pane fade show active" id="tab-1" role="tabpanel">
-                    <h3>Tab 1 Content</h3>
-                    <p>This is the content of the first tab.</p>
-                </div>
-
-                <div class="tab-pane fade" id="tab-2" role="tabpanel">
-                    <h3>Tab 2 Content</h3>
-                    <p>This is the content of the second tab.</p>
-                </div>
-
-                <div class="tab-pane fade" id="tab-3" role="tabpanel">
-                    <h3>Tab 3 Content</h3>
-                    <p>This is the content of the third tab.</p>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-</div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>

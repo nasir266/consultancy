@@ -99,6 +99,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get("getItem/{barcode}",[purchaseController::class,'getItem'])->name("ajax.pur_inv.getItem");
     Route::post('ajax/pur_invoice/pur', [purchaseController::class, 'search_invoice'])->name("ajax.pur_invoice.search");
     Route::post("purchase_invoice/add",[purchaseController::class,"add"])->name("purchase.invoice.post");
+    Route::post("delete_purchase_item/delete",[purchaseController::class,"delete_item"])->name("ajax.purchase.delete");
+    Route::post("recover_purchase_item/recover",[purchaseController::class,"recover_item"])->name("ajax.purchase.recover");
     //Route::get('ajax/pur_g
     //et_areas/{area_id}', [purchaseController::class, 'get_areas']);
 

@@ -13,4 +13,8 @@ class ItemInvoiceList extends Model
     public function item(){
         return $this->belongsTo(Item::class, 'item_id', 'id');
     }
+    public function godown()
+    {
+        return $this->belongsTo(Godown::class, 'godown', 'id');
+    }
 }

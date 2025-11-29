@@ -3768,7 +3768,7 @@ function get_invoice(value) {
                 var grand_tot = 0;
                 for (var i = 0; i < items.length; i++) {
                     var row = items[i];
-                    var party_discount = row.item.party_discount;
+                    var party_discount = row.item?.party_discount;
                     var barcode = row.item.barcode;
                     var partyItemCode = row.item.item_code;
                     var description = row.item.description;

@@ -6,6 +6,7 @@ use App\Models\Area;
 use App\Models\DefineItem;
 use App\Models\DefineSize;
 use App\Models\Godown;
+use App\Models\invoice_comment;
 use App\Models\Item;
 use App\Models\ItemInvoice;
 use App\Models\ItemInvoiceList;
@@ -42,11 +43,21 @@ class purchaseController extends Controller
         $search_pic = Item::pluck("item_code");
         $search_purchase_rate = Item::pluck("purchase_rate");
 
-        $goddown = Godown::all();
+        $goddown = Godown::where('default_status', 'default')
+            ->orWhere('default_status', 'LIKE', '%PurchaseInvoice%')
+            ->get();
+        //print_r($goddown);
+        //dd();
         $salesmans = salesman::all();
         $search_define_items = DefineItem::whereIn("id", $items->pluck("define_item_id"))->get();
         $search_define_sizes = DefineSize::whereIn("id", $items->pluck("define_size_id"))->get();
-        return view("admin.purchase-invoice.purchase-invoice")->with(['bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
+
+        $banks = ItemInvoice::pluck('bank')
+            ->merge(ItemInvoice::pluck('bt_to'))
+            ->unique()
+            ->values()
+            ->toArray();
+        return view("admin.purchase-invoice.purchase-invoice")->with(['banks' => $banks,'bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
     }
 
 
@@ -59,18 +70,71 @@ class purchaseController extends Controller
     function search_invoice(Request $req){
         $type = $req->type;
         if($type == "bill_no"){
-            $get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("bill_no",$req->value)->get()->first();
+            $get = ItemInvoice::with([
+                'item_invoice_lists.item',
+                'item_invoice_lists.godown',
+                'godown'
+            ])
+                ->where('bill_no', $req->value)
+                ->first();
+            $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
+            //$comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
+            $comment = invoice_comment::join('users', 'users.id', '=', 'invoice_comment.added_by')
+                ->where('invoice_comment.invoice_id', $itemInvoiceId)
+                ->select(
+                    'invoice_comment.*',
+                    'users.name as user_name'
+                )
+                ->get();
         }elseif ($type == "vr_no"){
-            $get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("vr_no",$req->value)->get()->first();
+            $get = ItemInvoice::with([
+                'item_invoice_lists.item',
+                'item_invoice_lists.godown',
+                'godown'
+            ])
+                ->where('vr_no', $req->value)
+                ->first();
+            //$get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("",$req->value)->get()->first();
+            $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
+            $comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
         }elseif ($type == "bilty_no"){
-            $get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("bilty_no",$req->value)->get()->first();
+            $get = ItemInvoice::with([
+                'item_invoice_lists.item',
+                'item_invoice_lists.godown',
+                'godown'
+            ])
+                ->where('bilty_no', $req->value)
+                ->first();
+            //$get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("bilty_no",$req->value)->get()->first();
+            $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
+            $comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
         }elseif ($type == "party_inv_no"){
-            $get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("party_inv_no",$req->value)->get()->first();
+            $get = ItemInvoice::with([
+                'item_invoice_lists.item',
+                'item_invoice_lists.godown',
+                'godown'
+            ])
+                ->where('party_inv_no', $req->value)
+                ->first();
+            //$get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("party_inv_no",$req->value)->get()->first();
+            $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
+            $comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
+        }elseif ($type == "invoice_list"){
+            return 'ggg';
+            $record = ItemInvoiceList::where('id', $req->value)->first();
+            $get_invoice_id = $record->id;
+            $get = ItemInvoice::with("item_invoice_lists.item")->with("godown")->where("id",$get_invoice_id)->get()->first();
+            $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
+            $comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
         }else{
             $get = '';
+            $comment = '';
         }
 
-        return response()->json($get);
+        return response()->json([
+            'invoice' => $get,
+            'comments' => $comment,
+        ]);
     }
 
     function add(Request $request){
@@ -161,6 +225,9 @@ class purchaseController extends Controller
                         $i->party_less_total       = $request->invoice_party_less_total[$index] ?? null;
                         $i->party_total_discount   = $request->invoice_party_total_discount[$index] ?? null;
                         $i->party_discount         = $request->invoice_party_discount[$index] ?? null;
+                        $i->margin                 = $request->invoice_margin[$index] ?? null;
+                        $i->total_margin           = $request->invoice_total_margin[$index] ?? null;
+                        $i->status                 =  null;
 
                         $i->save();
                     }
@@ -178,6 +245,21 @@ class purchaseController extends Controller
             Session::flash("error",$e->getMessage());
             return redirect("/employee-types/add");
         }
+    }
+
+    public function delete_item(Request $request)
+    {
+        DB::table('item_invoice_lists')
+            ->where('id', $request->id)
+            ->update(['status' => 1]);
+        return response()->json('success');
+    }
+    public function recover_item(Request $request)
+    {
+        DB::table('item_invoice_lists')
+            ->where('id', $request->id)
+            ->update(['status' => 2]);
+        return response()->json('success');
     }
    /* public function get_areas($area_id)
     {

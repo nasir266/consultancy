@@ -59,4 +59,5 @@ class Item extends Model
     public function define_size(){
         return $this->belongsTo(DefineSize::class);
     }
+
 }
