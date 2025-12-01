@@ -39,10 +39,20 @@ class saleController extends Controller
         $search_pic = Item::pluck("item_code");
         $search_purchase_rate = Item::pluck("purchase_rate");
 
-        $goddown = Godown::all();
+        $goddown = Godown::where('default_status', 'default')
+            ->orWhere('default_status', 'LIKE', '%PurchaseInvoice%')
+            ->get();
+        //print_r($goddown);
+        //dd();
         $salesmans = salesman::all();
         $search_define_items = DefineItem::whereIn("id", $items->pluck("define_item_id"))->get();
         $search_define_sizes = DefineSize::whereIn("id", $items->pluck("define_size_id"))->get();
-        return view("admin.sale-invoice.sale-invoice")->with(['bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
+
+        $banks = ItemInvoice::pluck('bank')
+            ->merge(ItemInvoice::pluck('bt_to'))
+            ->unique()
+            ->values()
+            ->toArray();
+        return view("admin.purchase-invoice.purchase-invoice")->with(['banks' => $banks,'bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
     }
 }
