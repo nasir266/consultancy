@@ -209,7 +209,7 @@
 
     <link rel="stylesheet" href="{{ asset('assets/css/barcode.css?v=4x') }}">
 @endsection
-@section('title','Purchase Invoice')
+@section('title','Sale Invoice')
 
 @section('content')
     <div id="loader" style="display: none;">
@@ -219,7 +219,7 @@
         <div class="flex items-center mb-2">
             <div class="w-1 h-7 bg-blue-600 mr-3"></div>
             <div class="w-1 h-7 bg-gradient-to-b from-blue-500 to-purple-600 mt-1 mr-2 rounded" style="height: 100%; width: 8px; background-color: #4f46e5; color: #4f46e5;"> 1</div>
-            <h2 class="text-2xl font-bold text-gray-900">Purchase Invoice</h2>
+            <h2 class="text-2xl font-bold text-gray-900">Sale Invoice</h2>
         </div>
         <form action="#" class="" id="invoice_form">
             @csrf
@@ -275,37 +275,8 @@
                             placeholder="Vr #"
                         />
                     </div>
-                    <div class="flex-1">
-                        <label
-                            for="item-id"
-                            class="text-gray-600 font-medium block mb-1"
-                        >Party Date</label
-                        >
-                        <input
-                            id="party_inv_date"
-                            name="party_inv_date"
-                            type="date"
-                            value="{{date('Y-m-d')}}"
-                            class="no-arrows border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
-                            placeholder="asdasd"
-                        />
-                    </div>
-                    <div class="flex-1">
-                        <label
-                            for="party-inv"
-                            class="block text-gray-600 font-medium mb-1"
-                        >Party Inv</label
-                        >
-                        <input
-                            id="party_inv_no"
-                            name="party_inv_no"
-                            type="text"
-                            {{--oninput="get_invoice(this.value, 'party_inv_no')"--}}
 
-                            class=" border border-gray-30 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
-                            placeholder="Party Inv"
-                        />
-                    </div>
+
                     <div class="flex-1">
                         <label
                             for="bilty"
