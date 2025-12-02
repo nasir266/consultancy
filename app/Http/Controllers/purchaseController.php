@@ -24,17 +24,17 @@ class purchaseController extends Controller
         $bill_no = ItemInvoice::latest('id')->value('bill_no') + 1 ?? 1;
         $vr_no = ItemInvoice::latest('id')->value('vr_no') + 1 ?? 1;
         $party_inv_no = ItemInvoice::latest('id')->value('party_inv_no');
-        if((int)$party_inv_no == 0){
+        /*if((int)$party_inv_no == 0){
             $party_inv_no = 1;
         }else{
             $party_inv_no = $party_inv_no + 1;
-        }
+        }*/
         $bilty_no = ItemInvoice::latest('id')->value('bilty_no');
-        if((int)$bilty_no == 0){
+        /*if((int)$bilty_no == 0){
             $bilty_no = 1;
         }else{
             $bilty_no = (int)$bilty_no + 1;
-        }
+        }*/
         $search_names = Party::pluck("name");
         $search = Party::with("party_mobiles")->get();
         $items = Item::orderBy("id","DESC")->get();
@@ -71,9 +71,7 @@ class purchaseController extends Controller
         $type = $req->type;
         if($type == "bill_no"){
             $get = ItemInvoice::with([
-                'item_invoice_lists.item',
-                'item_invoice_lists.godown',
-                'godown'
+                'item_invoice_lists.item'
             ])
                 ->where('bill_no', $req->value)
                 ->first();
@@ -88,9 +86,7 @@ class purchaseController extends Controller
                 ->get();
         }elseif ($type == "vr_no"){
             $get = ItemInvoice::with([
-                'item_invoice_lists.item',
-                'item_invoice_lists.godown',
-                'godown'
+                'item_invoice_lists.item'
             ])
                 ->where('vr_no', $req->value)
                 ->first();
@@ -99,9 +95,7 @@ class purchaseController extends Controller
             $comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
         }elseif ($type == "bilty_no"){
             $get = ItemInvoice::with([
-                'item_invoice_lists.item',
-                'item_invoice_lists.godown',
-                'godown'
+                'item_invoice_lists.item'
             ])
                 ->where('bilty_no', $req->value)
                 ->first();
@@ -110,9 +104,7 @@ class purchaseController extends Controller
             $comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
         }elseif ($type == "party_inv_no"){
             $get = ItemInvoice::with([
-                'item_invoice_lists.item',
-                'item_invoice_lists.godown',
-                'godown'
+                'item_invoice_lists.item'
             ])
                 ->where('party_inv_no', $req->value)
                 ->first();
@@ -138,8 +130,9 @@ class purchaseController extends Controller
     }
 
     function add(Request $request){
-        //return print_r($request->all());
-        //die();
+        //echo $request->salesman;
+        /*print_r($request->all());
+        die();*/
 
         try{
             $data = [

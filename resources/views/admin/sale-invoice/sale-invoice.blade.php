@@ -1,3 +1,4 @@
+
 @extends('layouts.master')
 @section('styles')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -275,8 +276,6 @@
                             placeholder="Vr #"
                         />
                     </div>
-<<<<<<< Updated upstream
-=======
 
                     <div class="flex-1">
                         <label
@@ -289,9 +288,11 @@
                             name="party_inv_no"
                             type="text"
                             {{--oninput="get_invoice(this.value, 'party_inv_no')"--}}
->>>>>>> Stashed changes
 
-
+                            class=" border border-gray-30 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
+                            placeholder="Party Inv"
+                        />
+                    </div>
                     <div class="flex-1">
                         <label
                             for="bilty"

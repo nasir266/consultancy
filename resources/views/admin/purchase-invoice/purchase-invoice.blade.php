@@ -2,6 +2,181 @@
 @section('styles')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
+
+        .disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .main-table td {
+            padding: 10px;
+            text-align: center;
+            border-right: 1px solid #f1f1f1;
+        }
+
+        .main-table tr{
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Nav Pills Styling */
+        .nav-pills {
+            display: flex;
+            justify-content: start;
+            margin-bottom: 15px;
+        }
+
+        .nav-pills .nav-link {
+            padding: 8px 15px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-pills .nav-link.active {
+            background-color: rgb(79 70 229 / var(--tw-bg-opacity, 1));
+            color: white;
+        }
+
+        .nav-pills .nav-link:hover {
+            background-color: rgb(79 70 229 / var(--tw-bg-opacity, 1));
+            color: white;
+        }
+
+
+        /* Hide Non-Active Payment Fields */
+        .payment-field {
+            display: none;
+        }
+
+        .payment-field.active {
+            display: block;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            background-color: rgb(79 70 229 / var(--tw-bg-opacity, 1));
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn:hover{
+            background: transparent;
+        }
+
+        .payment-fields {
+            margin-top: 20px;
+        }
+
+        button:focus-visible{
+            outline: red auto 1px;
+        }
+
+        span.multi-select-button{
+            width: 100%;
+            padding-top: 0.375rem;
+            padding-bottom: 0.375rem;
+            border: 1.5px solid #aaa !important;
+            border-radius: 0.375rem;
+            box-shadow: unset;
+        }
+
+        .multi-select-button:after{
+            content: unset !important;
+        }
+
+        .payment-field label{
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .payment-field input, .payment-field select {
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+
+        #invoice_form .main-table {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        #payment_total_amount{
+            font-weight: bolder;
+            border: 1.5px solid black !important;
+        }
+
+        .d-flex{
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .popup_close i{
+            cursor: pointer;
+        }
+
+        .dark-f{
+            background: #ddd;
+        }
+
+        tbody{
+            background: white;
+        }
+        .w-300{
+            min-width: 300px;
+        }
+
+        #description,#barcode{
+            font-weight: bold;
+        }
+
+        #item-search-model .selectize-input .item {
+            white-space: nowrap;       /* Prevent text from wrapping */
+            overflow: hidden;          /* Hide the overflow */
+            text-overflow: ellipsis;   /* Add the "..." */
+            width: 220px;              /* Set a fixed width */
+        }
+
+        .w-100{
+            width: 100px;
+        }
+
+        .w-150{
+            width: 150px;
+        }
+
+        .show_barcode{
+            margin-top: 20px;
+            margin-left: auto;
+        }
+
+        #barcode_wrapper {
+            display: flex;
+            flex-basis: 50%;
+            flex-wrap: wrap;
+            max-height: 200px;
+            overflow: scroll;
+        }
+        #barcode_wrapper .bq-inner-box {
+            flex-basis: 50%;
+            margin-bottom:10px;
+        }
+        .rightSide{
+            text-align: right;
+        }
+
+
+
+        /*end item style*/
+
+
         .disabled {
             cursor: not-allowed;
             opacity: 0.6;
@@ -1218,9 +1393,179 @@
       </div>
 
         </div>
-      {{--<div class="mt-8 flex items-center gap-2 justify-end">
-        <div class="flex items-center flex-wrap gap-3"></div>
-      </div>--}}
+      {{--paymeent method model--}}
+        <div
+            id="payment-method-model"
+            class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0"
+        >
+            <div
+                class="bg-white rounded-lg shadow-lg w-full max-w-[600px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
+                style="scrollbar-width: none"
+            >
+                <div id="modal-content" class="text-gray-700">
+
+                    <h3 style="font-size: 18px;font-weight: bold;">Payment Method</h3><br>
+                    <hr><br>
+
+                    <!-- Nav Pills to select payment method -->
+                    <ul class="nav nav-pills">
+                        <li class="nav-item">
+                            <a class="nav-link active lbl_stl_2 payment-method" aria-current="page" href="#" data-payment-method="cash">Cash</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link lbl_stl_2 payment-method" aria-current="page" href="#" data-payment-method="bank">Bank</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="cheque">Cheque</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="bank_transfer">Bank Transfer</a>
+                        </li>
+                    </ul>
+
+                    <hr>
+
+                    <!-- Payment Method Form Fields -->
+                    <div class="payment-fields">
+                        <!-- Cash Fields (displayed by default) -->
+                        <div class="row input-bx payment-field cash mt-2" style="display: block;">
+                            <div class="col-md-10">
+                                <label for="">Amount</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md" type="text" id="cash_amount" name="cash_amount" placeholder="Amount">
+                            </div>
+                            <div class="col-md-10 mt-2">
+                                <label for="">Remarks</label>
+                                <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="cash_remarks" id="cash_remarks" cols="30" rows="4" placeholder="Remarks"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Bank Fields (hidden by default) -->
+                        <div class="row input-bx payment-field bank mt-2" style="display: none;">
+                            <div class="col-md-10">
+                                <label for="">Bank</label>
+                                <select class="c_selectize w-full" id="bank" name="bank">
+                                    <option value="">Select Bank</option>
+                                    @foreach($banks as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Account Title</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_title" name="bank_account_title" placeholder="Amount">
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Account Number</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_number" name="bank_account_number" placeholder="Amount">
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Amount</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_amount" name="bank_amount" placeholder="Amount">
+                            </div>
+                            <div class="col-md-10 mt-2">
+                                <label for="">Remarks</label>
+                                <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="bank_remarks" id="bank_remarks" cols="30" rows="2" placeholder="Remarks"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Cheque Fields (hidden by default) -->
+                        <div class="row input-bx payment-field cheque mt-2" style="display: none;">
+                            <div class="col-md-10">
+                                <label for="">Bank</label>
+                                <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:outline-indigo-500 px-4 py-1.5 rounded-md" id="cheque_bank" name="cheque_bank">
+                                    <option value="">Select Bank</option>
+                                    <option value="Meezan Bank">Meezan Bank</option>
+                                </select>
+                            </div>
+                            <div class="col-md-10 mt-2">
+                                <label for="">Amount</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="cheque_amount" name="cheque_amount" placeholder="Amount">
+                            </div>
+                            <div class="col-md-10 mt-2">
+                                <label for="">Cheque Date</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  class="mt-2 text-custome" type="date" id="cheque_date" name="cheque_date">
+                            </div>
+                            <div class="col-md-10 mt-2">
+                                <label for="">Remarks</label>
+                                <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="cheque_remarks" id="cheque_remarks" cols="30" rows="2" placeholder="Remarks"></textarea>
+                            </div>
+                        </div>
+
+
+
+                        <div class="row input-bx payment-field bank_transfer mt-2" style="display: none;">
+                            <div class="col-md-10">
+                                <label for="">From</label>
+                                <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:outline-indigo-500 px-4 py-1.5 rounded-md" id="bt_from" name="bt_from">
+                                    <option value="">Select Bank</option>
+                                    <option value="Meezan Bank">Meezan Bank</option>
+                                </select>
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">To</label>
+                                <select class="c_selectize w-full" id="bt_to" name="bt_to">
+                                    <option value="">Select Bank</option>
+                                    @foreach($banks as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Account Title</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_title" name="bt_account_title" placeholder="Amount">
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Account Number</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_number" name="bt_account_number" placeholder="Amount">
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Amount</label>
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_amount" name="bt_amount" placeholder="Amount">
+                            </div>
+
+                            <div class="col-md-10 mt-2">
+                                <label for="">Remarks</label>
+                                <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="bt_remarks" id="bt_remarks" cols="30" rows="2" placeholder="Remarks"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                    <hr>
+                    <div class="row input-bx mt-3 justify-content-end">
+                        <div class="col-md-6">
+                            <label style="font-weight: bolder;font-size: 15px" for="">Total Amount</label>
+                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="payment_total_amount" name="payment_total_amount" placeholder="Total Amount" readonly>
+                        </div>
+
+                    </div>
+
+                </div>
+                <div class="flex items-center gap-3 justify-end text-sm mt-14">
+                    <button
+                        class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
+                        onclick="closeModal(event, 'payment-method-model')"
+                        type="button"
+                    >
+                        Close
+                    </button>
+                    <button
+                        class="px-5 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                        id="insert_payment_method"
+                        type="button"
+                    >
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
   </div>
 </div>
@@ -1371,9 +1716,9 @@
                 </div>
             </from>
             <div class="flex gap-3 flex-wrap sm:flex-nowrap items-end overflow-x-auto pb-3">
-                <div class="flex-grow flex-shrink-0">
-                    <table class="table-auto w-full border-collapse border text-sm search_items">
-                        <thead class="bg-gray-50 text-gray-600 font-medium">
+                <div class="flex-grow flex-shrink-0" style="height: 200px;">
+                    <table class="table-auto w-full border-collapse border text-sm search_items" >
+                        <thead class="bg-gray-50 text-gray-600 font-medium" style="position:sticky; top:0; background:#f8f9fa; z-index:2; ">
                         <tr>
                             <th class="border border-gray-200 px-4 py-2 text-left">
                                 Sr #
@@ -1670,182 +2015,14 @@
 </div>
 
 
-    {{--payment method model--}}
-
-    <div
-        id="payment-method-model"
-        class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0"
-    >
-        <div
-            class="bg-white rounded-lg shadow-lg w-full max-w-[600px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
-            style="scrollbar-width: none"
-        >
-            <div id="modal-content" class="text-gray-700">
-
-                <h3 style="font-size: 18px;font-weight: bold;">Payment Method</h3><br>
-                <hr><br>
-
-                <!-- Nav Pills to select payment method -->
-                <ul class="nav nav-pills">
-                    <li class="nav-item">
-                        <a class="nav-link active lbl_stl_2 payment-method" aria-current="page" href="#" data-payment-method="cash">Cash</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link lbl_stl_2 payment-method" aria-current="page" href="#" data-payment-method="bank">Bank</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="cheque">Cheque</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="bank_transfer">Bank Transfer</a>
-                    </li>
-                </ul>
-
-                <hr>
-
-                <!-- Payment Method Form Fields -->
-                <div class="payment-fields">
-                    <!-- Cash Fields (displayed by default) -->
-                    <div class="row input-bx payment-field cash mt-2" style="display: block;">
-                        <div class="col-md-10">
-                            <label for="">Amount</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md" type="text" id="cash_amount" name="cash_amount" placeholder="Amount">
-                        </div>
-                        <div class="col-md-10 mt-2">
-                            <label for="">Remarks</label>
-                            <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="cash_remarks" id="cash_remarks" cols="30" rows="4" placeholder="Remarks"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Bank Fields (hidden by default) -->
-                    <div class="row input-bx payment-field bank mt-2" style="display: none;">
-                        <div class="col-md-10">
-                            <label for="">Bank</label>
-                            <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md" {{--class="c_selectize"--}} id="bank" name="bank">
-                                <option value="">Select Bank</option>
-                                @foreach($banks as $item)
-                                    <option value="{{ $item }}">{{ $item }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Account Title</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_title" name="bank_account_title" placeholder="Amount">
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Account Number</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_number" name="bank_account_number" placeholder="Amount">
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Amount</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_amount" name="bank_amount" placeholder="Amount">
-                        </div>
-                        <div class="col-md-10 mt-2">
-                            <label for="">Remarks</label>
-                            <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="bank_remarks" id="bank_remarks" cols="30" rows="2" placeholder="Remarks"></textarea>
-                        </div>
-                    </div>
-
-                    <!-- Cheque Fields (hidden by default) -->
-                    <div class="row input-bx payment-field cheque mt-2" style="display: none;">
-                        <div class="col-md-10">
-                            <label for="">Bank</label>
-                            <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:outline-indigo-500 px-4 py-1.5 rounded-md" id="cheque_bank" name="cheque_bank">
-                                <option value="">Select Bank</option>
-                                <option value="Meezan Bank">Meezan Bank</option>
-                            </select>
-                        </div>
-                        <div class="col-md-10 mt-2">
-                            <label for="">Amount</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="cheque_amount" name="cheque_amount" placeholder="Amount">
-                        </div>
-                        <div class="col-md-10 mt-2">
-                            <label for="">Cheque Date</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  class="mt-2 text-custome" type="date" id="cheque_date" name="cheque_date">
-                        </div>
-                        <div class="col-md-10 mt-2">
-                            <label for="">Remarks</label>
-                            <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="cheque_remarks" id="cheque_remarks" cols="30" rows="2" placeholder="Remarks"></textarea>
-                        </div>
-                    </div>
-
-
-
-                    <div class="row input-bx payment-field bank_transfer mt-2" style="display: none;">
-                        <div class="col-md-10">
-                            <label for="">From</label>
-                            <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:outline-indigo-500 px-4 py-1.5 rounded-md" id="bt_from" name="bt_from">
-                                <option value="">Select Bank</option>
-                                <option value="Meezan Bank">Meezan Bank</option>
-                            </select>
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">To</label>
-                            <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md" {{--class="c_selectize"--}} id="bt_to" name="bt_to">
-                                <option value="">Select Bank</option>
-                                @foreach($banks as $item)
-                                    <option value="{{ $item }}">{{ $item }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Account Title</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_title" name="bt_account_title" placeholder="Amount">
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Account Number</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_number" name="bt_account_number" placeholder="Amount">
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Amount</label>
-                            <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_amount" name="bt_amount" placeholder="Amount">
-                        </div>
-
-                        <div class="col-md-10 mt-2">
-                            <label for="">Remarks</label>
-                            <textarea class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  name="bt_remarks" id="bt_remarks" cols="30" rows="2" placeholder="Remarks"></textarea>
-                        </div>
-                    </div>
-
-                </div>
-                <hr>
-                <div class="row input-bx mt-3 justify-content-end">
-                    <div class="col-md-6">
-                        <label style="font-weight: bolder;font-size: 15px" for="">Total Amount</label>
-                        <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="payment_total_amount" name="payment_total_amount" placeholder="Total Amount" readonly>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="flex items-center gap-3 justify-end text-sm mt-14">
-                <button
-                    class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
-                    onclick="closeModal(event, 'payment-method-model')"
-                    type="button"
-                >
-                    Close
-                </button>
-                <button
-                    class="px-5 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-                    id="insert_payment_method"
-                    type="button"
-                >
-                    Save
-                </button>
-            </div>
-        </div>
-    </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{{ asset('assets/js/mult-select.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- jsPDF with html plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+
 <script>
 
     const input = document.getElementById('search');
@@ -1869,7 +2046,10 @@
 </script>
 <script>
     // ensure meta tag exists: <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    $(".c_selectize").selectize({
+        create: true,
+        maxItems: 1,
+    });
 
 
 
@@ -2305,7 +2485,7 @@
             }
         });
         function add_row_in_table(){
-            //$('#rbarcode').focus();
+            $('#loader').show();
             var rbarcode = $('#rbarcode').val();
             var item_code = $('#item_code').val();
             var description = $('#description').val();
@@ -2418,7 +2598,7 @@
 
 
                 $(".main-table tbody").append(newRow);
-
+                $('#loader').hide();
                 calcTable();
                 $('#rbarcode').val('');
                 $('#item_code').val('');
@@ -2569,7 +2749,7 @@
                 },
                     success: function(response) {
                     //window.alert(response);
-                        //console.log(response);
+                        console.log(response);
                         if (response) {
                             var data = (response);
                             if (response.comments.length > 0) {
@@ -2661,6 +2841,7 @@
                             $(".bin-table tbody").empty();
 
                             var bin_counter = 0;
+                            var no =1;
                             for (var i = 0; i < items.length; i++) {
                                 var row = items[i];
                                 //console.log(row);
@@ -2669,11 +2850,11 @@
                                 }else{
                                     var dis = row.party_discount;
                                 }
-                                if(data.invoice.godown !== null){
+                                /*if(data.invoice.godown !== null){
                                     var godown = data.invoice.godown.name;
                                 }else{
                                     var godown = '';
-                                }
+                                }*/
                                 var party_discount =dis;
                                 var barcode = row.barcode;
                                 var partyItemCode = row.item_code;
@@ -2733,7 +2914,7 @@
                                 var row_id = row.id;
                                 if(row.status != 1){
                                     if(row.status == 2){
-                                        var sty = "style='background-color: #C6D2FF;'";
+                                        var sty = "style='background-color: #DFE2ED;'";
                                     }else{
                                         var sty = "style='background-color: #FFFFFF;'";
                                     }
@@ -2765,7 +2946,7 @@
                                         "<input type='hidden' name='invoice_total_dis_percent[]' id='itableTotalDisc-"+table_id+"' value='" + (perAgeDis ?? '') + "' />" +
 
                                         // Visible columns
-                                        "<td class='table_id'>" + (table_id ?? '-') + "</td>" +
+                                        "<td class='table_id'>" + (no++ ?? '-') + "</td>" +
                                         "<td>" + (row.barcode ?? '-') + "</td>" +
                                         "<td>" + (row.party_item_code ?? '-') + "</td>" +
                                         "<td>" + (row.description ?? '-') + "</td>" +
@@ -3064,6 +3245,7 @@
                 },
                 success: function (response) {
                     deleteItemRow(data);
+                    updateSerials();
                     get_invoice(value, pass_type);
                     get_invoice(id, 'invoice_list');
                     $('#loader').hide();
@@ -3085,6 +3267,7 @@
                     //window.alert(value);
                     //window.alert(pass_type);
                     deleteItemRow(data);
+                    updateSerials();
                     get_invoice(value, pass_type);
                     $('#loader').hide();
                     //console.log(pass_type);
@@ -3484,6 +3667,28 @@
             // Initialize by showing the default active tab
             let defaultMethod = document.querySelector(".payment-method.active").getAttribute("data-payment-method");
             showPaymentMethod(defaultMethod);
+        });
+
+        jQuery(document).ready(function() {
+            jQuery('#cash_amount, #bank_amount, #cheque_amount, #bt_amount').on('input', function() {
+                var cash = parseFloat(jQuery('#cash_amount').val()) || 0;
+                var bank = parseFloat(jQuery('#bank_amount').val()) || 0;
+                var cheque = parseFloat(jQuery('#cheque_amount').val()) || 0;
+                var bt_amount = parseFloat(jQuery('#bt_amount').val()) || 0;
+
+                var total = cash + bank + cheque + bt_amount;
+                jQuery('#payment_total_amount').val(total.toFixed(3));
+
+
+                changeBarcode();
+            });
+
+            jQuery('#insert_payment_method').on('click', function() {
+                var totalAmount = jQuery('#payment_total_amount').val() || 0;
+                jQuery('#paid_amount').val(totalAmount);
+                calcTable();
+                closeModal(event, 'payment-method-model')
+            });
         });
     </script>
 @endsection
