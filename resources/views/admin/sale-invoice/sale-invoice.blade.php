@@ -275,6 +275,21 @@
                             placeholder="Vr #"
                         />
                     </div>
+<<<<<<< Updated upstream
+=======
+
+                    <div class="flex-1">
+                        <label
+                            for="party-inv"
+                            class="block text-gray-600 font-medium mb-1"
+                        >Party Inv</label
+                        >
+                        <input
+                            id="party_inv_no"
+                            name="party_inv_no"
+                            type="text"
+                            {{--oninput="get_invoice(this.value, 'party_inv_no')"--}}
+>>>>>>> Stashed changes
 
 
                     <div class="flex-1">
