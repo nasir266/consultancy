@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 @section('styles')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -276,21 +275,9 @@
                             placeholder="Vr #"
                         />
                     </div>
-                    <div class="flex-1">
-                        <label
-                            for="item-id"
-                            class="text-gray-600 font-medium block mb-1"
-                        >Party Date</label
-                        >
-                        <input
-                            id="party_inv_date"
-                            name="party_inv_date"
-                            type="date"
-                            value="{{date('Y-m-d')}}"
-                            class="no-arrows border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
-                            placeholder="asdasd"
-                        />
-                    </div>
+<<<<<<< Updated upstream
+=======
+
                     <div class="flex-1">
                         <label
                             for="party-inv"
@@ -302,11 +289,9 @@
                             name="party_inv_no"
                             type="text"
                             {{--oninput="get_invoice(this.value, 'party_inv_no')"--}}
+>>>>>>> Stashed changes
 
-                            class=" border border-gray-30 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
-                            placeholder="Party Inv"
-                        />
-                    </div>
+
                     <div class="flex-1">
                         <label
                             for="bilty"
