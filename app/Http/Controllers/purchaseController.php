@@ -130,12 +130,12 @@ class purchaseController extends Controller
     }
 
     function add(Request $request){
-        //echo $request->salesman_id;
-        //print_r($request->all());
-        //die();
+        /*print_r($request->all());
+        die();*/
 
         try{
             $data = [
+                'sal_id' => $request->salesman_id,
                 'date' => $request->current_date,
                 'bill_no' => $request->bill_no,
                 'vr_no' => $request->vr_no,
@@ -178,6 +178,8 @@ class purchaseController extends Controller
                 'payment_total_amount' => $request->payment_total_amount,
                 'party_id' => $request->party_id,
             ];
+
+            //return $data;
 
             $record = ItemInvoice::updateOrCreate(
                 ['bill_no' => $request->bill_no],

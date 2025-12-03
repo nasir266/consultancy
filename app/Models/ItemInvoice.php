@@ -33,6 +33,7 @@ class ItemInvoice extends Model
         'total_amount',
         'payment_status',
         'godown_id',
+        'salesman_id',
         'item_id',
         'cash_amount',
         'cash_remarks',

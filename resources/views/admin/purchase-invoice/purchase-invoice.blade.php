@@ -2059,7 +2059,7 @@
 
 
     $('#comment_form').on('submit', function(e) {
-
+        e.preventDefault();
 
         var ud_check = $('#ud_check').val();   // <-- FIXED
 
@@ -3151,12 +3151,12 @@
                     $("#invoice_save").text("Reloading");
                     $("#invoice_save").attr("disabled", false);
 
-                    toastr.success('Invoice Added Successfully!', 'Success', {
+                    /*toastr.success('Invoice Added Successfully!', 'Success', {
                         timeOut: 600,
                         onHidden: function() {
                             location.reload();
                         }
-                    });
+                    });*/
                 },
 
                 error: function(xhr) {
