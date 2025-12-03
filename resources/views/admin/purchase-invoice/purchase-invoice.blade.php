@@ -383,6 +383,14 @@
     <link rel="stylesheet" href="{{ asset('assets/css/mult-select.css?v=2') }}">
 
     <link rel="stylesheet" href="{{ asset('assets/css/barcode.css?v=4x') }}">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.min.css" />
+
+    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>--}}
+
+
 @endsection
 @section('title','Purchase Invoice')
 
@@ -636,8 +644,8 @@
               >Salesman</label
             >
             <select
-              name="salesman"
-              id="salesman"
+              name="salesman_id"
+              id="salesman_id"
               class="selectize-input-sp"
             >
               <option value="" >Salesman</option>
@@ -1910,66 +1918,6 @@
 
 
 
-{{--delete and update model--}}
-<div
-    id="update-model"
-    class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0 model"
->
-    <div
-        class="bg-white rounded-lg shadow-lg w-full max-w-[700px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
-        style="scrollbar-width: none"
-    >
-        <form  class="block mb-7 space-y-5" id="comment_form"  method="POST">
-        <div class="text-gray-700">
-
-            <div class="d-flex">
-                <h3 class="text-gray-600 text-xl font-medium mb-6">Comment Model</h3>
-                <div class="popup_close">
-                    <i class="fas fa-close" onclick="closeModal(event, 'update-model')"></i>
-                </div>
-            </div>
-
-                <div class="flex flex-col gap-1">
-                    <label for="search-item" class="text-gray-600 font-medium"
-                    >Comment</label
-                    >
-                    @csrf
-                    <input type="hidden" name="ud_check" id="ud_check" value="">
-                    <input type="hidden" name="ud_invoice_id" id="ud_invoice_id" value="">
-                    <input type="hidden" name="ud_invoice" value="purchase_invoice">
-                    <input type="hidden" name="ud_type" id="ud_type" value="delete">
-                    <textarea
-                        class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1.5 rounded-md search-input"
-                        name="ud_comment"
-                        id="ud_comment"
-                        rows="6"
-                    ></textarea>
-
-                </div>
-
-
-        </div>
-        <div class="flex items-center gap-3 justify-end text-sm mt-14">
-
-            <button
-                class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-                type="submit"
-            >
-                <i data-feather="save" class="w-4 h-4 mr-3"></i>
-                <span id="comment_save"> Save</span>
-            </button>
-
-            <button
-                class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
-                type="button"
-                onclick="closeModal(event, 'comment-model')"
-            >
-                Close
-            </button>
-        </div>
-        </form>
-    </div>
-</div>
 
 <div
     id="comment-model"
@@ -1979,7 +1927,7 @@
         class="bg-white rounded-lg shadow-lg w-full max-w-[700px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
         style="scrollbar-width: none"
     >
-        <form  class="block mb-7 space-y-5" id="comment_form"  method="POST">
+        <form  class="block mb-7 space-y-5"  method="POST">
         <div class="text-gray-700">
 
             <div class="d-flex">
@@ -2014,6 +1962,66 @@
     </div>
 </div>
 
+    {{--delete and update model--}}
+    <div
+        id="update-model"
+        class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0 model"
+    >
+        <div
+            class="bg-white rounded-lg shadow-lg w-full max-w-[700px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
+            style="scrollbar-width: none"
+        >
+            <form  class="block mb-7 space-y-5" id="comment_form"  method="POST">
+                <div class="text-gray-700">
+
+                    <div class="d-flex">
+                        <h3 class="text-gray-600 text-xl font-medium mb-6">Comment Model</h3>
+                        <div class="popup_close">
+                            <i class="fas fa-close" onclick="closeModal(event, 'update-model')"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1">
+                        <label for="search-item" class="text-gray-600 font-medium"
+                        >Comment</label
+                        >
+                        @csrf
+                        <input type="hidden" name="ud_check" id="ud_check" value="">
+                        <input type="hidden" name="ud_invoice_id" id="ud_invoice_id" value="">
+                        <input type="hidden" name="ud_invoice" value="purchase_invoice">
+                        <input type="hidden" name="ud_type" id="ud_type" value="delete">
+                        <textarea
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1.5 rounded-md search-input"
+                            name="ud_comment"
+                            id="ud_comment"
+                            rows="6"
+                        ></textarea>
+
+                    </div>
+
+
+                </div>
+                <div class="flex items-center gap-3 justify-end text-sm mt-14">
+
+                    <button
+                        class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                        type="submit"
+                    >
+                        <i data-feather="save" class="w-4 h-4 mr-3"></i>
+                        <span id="comment_save"> Save</span>
+                    </button>
+
+                    <button
+                        class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
+                        type="button"
+                        onclick="closeModal(event, 'comment-model')"
+                    >
+                        Close
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -2046,15 +2054,12 @@
 </script>
 <script>
     // ensure meta tag exists: <meta name="csrf-token" content="{{ csrf_token() }}">
-    $(".c_selectize").selectize({
-        create: true,
-        maxItems: 1,
-    });
+
 
 
 
     $('#comment_form').on('submit', function(e) {
-        e.preventDefault();
+
 
         var ud_check = $('#ud_check').val();   // <-- FIXED
 
@@ -2064,6 +2069,7 @@
 
         $("#comment_save").attr("disabled", true);
 
+        //let form = $("#comment_form")[0];
         let formData = new FormData(this);
 
         $.ajax({
@@ -2126,8 +2132,8 @@
                 // 1️⃣ Special case: jump from #party_name → #salesman
                 if (activeEl.attr('id') === 'party_name-selectized') {
                     //window.alert(activeEl.attr('id'));
-                    $("#salesman")[0].selectize.focus();
-                    //document.getElementById('salesman').focus();
+                    $("#salesman_id")[0].selectize.focus();
+                    //document.getElementById('salesman_id').focus();
                     return;
                 }
                 if (activeEl.attr('id') === 'pcsPkt') {
@@ -2178,8 +2184,7 @@
         $("#party_name")[0].selectize.setValue("");
         $("#party_name")[0].selectize.setValue("");
         $("#party_name")[0].selectize.setValue("");
-        $("#salesman")[0].selectize.setValue("");
-        $("#salesman")[0].selectize.setValue("");
+        $("#salesman_id")[0].selectize.setValue("");
         $('#profit').val('');
         $('#party_discount').val('');
         $('#margin_field').val('0');
@@ -2794,7 +2799,7 @@
                             $('#party_id').val(data.invoice.party_id);
                             $("#party_name")[0].selectize.setValue(data.invoice.party_id);
                             $('#ud_invoice_id').val(data.invoice.id);
-                            $("#salesman")[0].selectize.setValue(data.invoice.salesman);
+                            $("#salesman_id")[0].selectize.setValue(data.invoice.salesman);
                             $('#current_date').val(data.invoice.date);
                             $('#bill_no').val(data.invoice.bill_no);
                             $('#bilty_no').val(data.invoice.bilty_no);
@@ -3691,6 +3696,13 @@
             });
         });
     </script>
+
+   {{-- <script>
+        $(".c_selectize").selectize({
+            create: true,
+            maxItems: 1,
+        });
+    </script>--}}
 @endsection
 
 
