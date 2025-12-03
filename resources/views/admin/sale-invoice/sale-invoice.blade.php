@@ -277,38 +277,8 @@
                         />
                     </div>
 
-                    <div class="flex-1">
-                        <label
-                            for="party-inv"
-                            class="block text-gray-600 font-medium mb-1"
-                        >Party Inv</label
-                        >
-                        <input
-                            id="party_inv_no"
-                            name="party_inv_no"
-                            type="text"
-                            {{--oninput="get_invoice(this.value, 'party_inv_no')"--}}
 
-                            class=" border border-gray-30 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
-                            placeholder="Party Inv"
-                        />
-                    </div>
-                    <div class="flex-1">
-                        <label
-                            for="bilty"
-                            class="block text-gray-600 font-medium mb-1"
-                        >Bilty #</label
-                        >
-                        <input
-                            id="bilty_no"
-                            name="bilty_no"
-                            type="text"
-                            {{--onchange="get_invoice(this.value, 'bilty_no')"--}}
 
-                            class=" border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
-                            placeholder="Bilty #"
-                        />
-                    </div>
                     <div class="flex gap-2.5 items-center" style="margin-top: 22px;">
                         <button
                             type="button"

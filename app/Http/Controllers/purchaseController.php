@@ -130,9 +130,9 @@ class purchaseController extends Controller
     }
 
     function add(Request $request){
-        //echo $request->salesman;
-        /*print_r($request->all());
-        die();*/
+        //echo $request->salesman_id;
+        //print_r($request->all());
+        //die();
 
         try{
             $data = [
@@ -157,7 +157,7 @@ class purchaseController extends Controller
                 'total_amount' => $request->total_amount2,
                 'payment_status' => $request->payment_status ?? 'unpaid',
                 'godown_id' => $request->godown,
-                'salesman_id' => $request->salesman,
+                'salesman_id' => $request->salesman_id,
                 'cash_amount' => $request->cash_amount,
                 'cash_remarks' => $request->cash_remarks,
                 'bank' => $request->bank,
