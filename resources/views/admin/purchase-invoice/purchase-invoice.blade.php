@@ -2799,7 +2799,7 @@
                             $('#party_id').val(data.invoice.party_id);
                             $("#party_name")[0].selectize.setValue(data.invoice.party_id);
                             $('#ud_invoice_id').val(data.invoice.id);
-                            $("#salesman_id")[0].selectize.setValue(data.invoice.salesman);
+                            $("#salesman_id")[0].selectize.setValue(data.invoice.salesman_id);
                             $('#current_date').val(data.invoice.date);
                             $('#bill_no').val(data.invoice.bill_no);
                             $('#bilty_no').val(data.invoice.bilty_no);
@@ -3151,12 +3151,12 @@
                     $("#invoice_save").text("Reloading");
                     $("#invoice_save").attr("disabled", false);
 
-                    /*toastr.success('Invoice Added Successfully!', 'Success', {
+                    toastr.success('Invoice Added Successfully!', 'Success', {
                         timeOut: 600,
                         onHidden: function() {
                             location.reload();
                         }
-                    });*/
+                    });
                 },
 
                 error: function(xhr) {
