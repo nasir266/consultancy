@@ -19,7 +19,9 @@ class AjaxController extends Controller
 
     public function getItemDetails(Request $request)
     {
+
         $item = Item::with("define_item")->with("define_size")->findOrFail($request->id);
+
         return response()->json([
             'name' => $item->define_item->name,
             'size' => $item->define_size->name,

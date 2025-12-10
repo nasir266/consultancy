@@ -2631,7 +2631,7 @@
             var str = th.id;
             let parts = str.split('-');
             let rowNo = parts[1];
-
+            /window.alert(rowNo);
             var tableQty = document.getElementById('tableQty-'+rowNo).innerHTML;
             var tableLess = document.getElementById('tableLess-'+rowNo).innerHTML;
             var tablePkt = document.getElementById('tablePkt-'+rowNo).innerHTML;

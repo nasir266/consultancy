@@ -11,6 +11,7 @@ use App\Models\Item;
 use App\Models\ItemInvoice;
 use App\Models\ItemInvoiceList;
 use App\Models\Party;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Models\salesman;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,13 @@ class purchaseController extends Controller
         $parties = Party::all();
 
         $bill_no = ItemInvoice::latest('id')->value('bill_no') + 1 ?? 1;
-        $vr_no = ItemInvoice::latest('id')->value('vr_no') + 1 ?? 1;
+        //$vr_no = ItemInvoice::latest('id')->value('vr_no') + 1 ?? 1;
+        $today = date('Y-m-d');
+        $vr_no = ItemInvoice::whereDate('created_at', $today)
+            ->latest('id')
+            ->value('vr_no');
+        $vr_no = $vr_no ? $vr_no + 1 : 1;
+
         $party_inv_no = ItemInvoice::latest('id')->value('party_inv_no');
         /*if((int)$party_inv_no == 0){
             $party_inv_no = 1;
@@ -51,13 +58,13 @@ class purchaseController extends Controller
         $salesmans = salesman::all();
         $search_define_items = DefineItem::whereIn("id", $items->pluck("define_item_id"))->get();
         $search_define_sizes = DefineSize::whereIn("id", $items->pluck("define_size_id"))->get();
-
+        $setting = Setting::first();
         $banks = ItemInvoice::pluck('bank')
             ->merge(ItemInvoice::pluck('bt_to'))
             ->unique()
             ->values()
             ->toArray();
-        return view("admin.purchase-invoice.purchase-invoice")->with(['banks' => $banks,'bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
+        return view("admin.purchase-invoice.purchase-invoice")->with(['banks' => $banks, "setting" => $setting, 'bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
     }
 
 
@@ -75,8 +82,8 @@ class purchaseController extends Controller
             ])
                 ->where('bill_no', $req->value)
                 ->first();
+
             $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
-            //$comment = invoice_comment::where('invoice_id', $itemInvoiceId)->get();
             $comment = invoice_comment::join('users', 'users.id', '=', 'invoice_comment.added_by')
                 ->where('invoice_comment.invoice_id', $itemInvoiceId)
                 ->select(
@@ -128,10 +135,29 @@ class purchaseController extends Controller
             'comments' => $comment,
         ]);
     }
+    function update_status(Request $req){
+        $type = $req->type;
+        if($type == "bill_no"){
+            $get = ItemInvoice::with([
+                'item_invoice_lists.item'
+            ])
+                ->where('bill_no', $req->value)
+                ->first();
+
+            $itemInvoiceId = $get->item_invoice_lists->pluck('item_invoice_id')->first();
+            ItemInvoiceList::where('item_invoice_id', $itemInvoiceId)
+                ->where('status', 1)
+                ->update(['status' => 0]);
+            return response()->json(['success'=> true]);
+        }else{
+            return response()->json(['success'=> false]);
+        }
+
+    }
 
     function add(Request $request){
-        /*print_r($request->all());
-        die();*/
+        //print_r($request->all());
+
 
         try{
             $data = [
@@ -179,12 +205,15 @@ class purchaseController extends Controller
                 'party_id' => $request->party_id,
             ];
 
-            //return $data;
 
             $record = ItemInvoice::updateOrCreate(
                 ['bill_no' => $request->bill_no],
                 $data
             );
+            ItemInvoiceList::where('item_invoice_id', $record->id)
+                ->where('status', 1)
+                ->update(['status' => 2]);
+
 
 
             if ($request->item_id && !empty($request->item_id)) {
@@ -197,7 +226,7 @@ class purchaseController extends Controller
                         ->delete();
                 }
 
-                foreach ($request->item_id as $index => $item_id) {
+                foreach ($request->item_id as $index => $item_id) {#
                     if (!in_array($item_id, $existingItemIds)) {
                         $i = new ItemInvoiceList;
                         $i->item_invoice_id = $record->id;
@@ -227,9 +256,10 @@ class purchaseController extends Controller
                         $i->save();
                     }
                 }
+
             } else {
 
-                ItemInvoiceList::where('item_invoice_id', $record->id)->delete();
+                //ItemInvoiceList::where('item_invoice_id', $record->id)->delete();
 
             }
 
@@ -253,7 +283,7 @@ class purchaseController extends Controller
     {
         DB::table('item_invoice_lists')
             ->where('id', $request->id)
-            ->update(['status' => 2]);
+            ->update(['status' => 3]);
         return response()->json('success');
     }
    /* public function get_areas($area_id)
@@ -271,4 +301,38 @@ class purchaseController extends Controller
         $get = Party::with("party_mobiles")->with("party_less")->with("area")->with("area.city")->find($req->value);
         return response()->json($get);
     }
+
+    public function ajaxDelete(Request $request)
+    {
+        $id = $request->id;
+
+        // Get item from main table
+        $ItemInvoiceList = ItemInvoiceList::find($id)->toArray();
+        $bin = session()->get('bin', []);
+        $bin[$id] = $ItemInvoiceList;
+
+        session()->put('bin', $bin);
+        $binItems = session()->get('bin', []);
+        return response()->json([
+            'success' => true,
+            'binItems' => $binItems
+        ]);
+    }
+    public function getItemDetails(Request $request)
+    {
+
+        $item = Item::with(['define_item', 'define_size'])
+            ->where('barcode', $request->id)
+            ->firstOrFail();
+
+        return response()->json([
+            'item_name' => $item->description,
+            'name' => $item->define_item->name,
+            'size' => $item->define_size->name,
+            'code' => $item->item_code,
+            'sale_rate' => $item->sale_rate,
+            'barcode' => $item->barcode,
+        ]);
+    }
+
 }

@@ -3769,25 +3769,25 @@ function get_invoice(value) {
                 for (var i = 0; i < items.length; i++) {
                     var row = items[i];
                     var party_discount = row.item?.party_discount;
-                    var barcode = row.item.barcode;
-                    var partyItemCode = row.item.item_code;
-                    var description = row.item.description;
+                    var barcode = row.barcode;
+                    var partyItemCode = row.item_code;
+                    var description = row.description;
                     var godown = data.godown.name;
-                    var packetQty = row.item.packet_qty;
-                    var piecesInPacket = row.item.pieces_in_packet;
-                    var totalPieces = row.item.total_pieces;
-                    var purchaseRate = row.item.purchase_rate;
-                    var partyLess = row.item.party_less;
-                    var margin_field = row.item.margin_field;
+                    var packetQty = row.packet_qty;
+                    var piecesInPacket = row.pieces_in_packet;
+                    var totalPieces = row.total_pieces;
+                    var purchaseRate = row.purchase_rate;
+                    var partyLess = row.party_less;
+                    var margin_field = row.margin_field;
                     var table_id = i + 1;
-                    var wholesale_profit = row.item.wholesale_profit;
-                    var parts = wholesale_profit.split(" | ");
+                    var wholesale_profit = row.wholesale_profit;
+                    //var parts = wholesale_profit.split(" | ");
 
                     var less = (((purchaseRate * party_discount) / 100) * totalPieces) + (partyLess * totalPieces);
                     var party_less_total = (partyLess * totalPieces);
                     var party_total_discount = (((purchaseRate * party_discount) / 100) * totalPieces);
 
-                    var id = row.item.id;
+                    var id = row.id;
                     party_discount_total = party_discount;
                     //console.log(row.total_less);
                     //console.log(row.amount);
@@ -3820,7 +3820,7 @@ function get_invoice(value) {
     "<input type='hidden' name='invoice_party_total_discount[]' value='" + (row.party_total_discount ?? '') + "' />" +
     "<input type='hidden' name='invoice_party_discount[]' value='" + (row.party_discount ?? '') + "' />" +
     "<input type='hidden' name='invoice_margin_field[]' value='" + (row.margin_field ?? '') + "' />" +
-    "<input type='hidden' name='item_id[]' value='" + (row.item_id ?? '') + "' class='item-id' />" +
+    "<input type='hidden' name='item_id[]' value='" + (row.id ?? '') + "' class='item-id' />" +
     "<input type='hidden' name='invoice_party_less_per_pcs[]' value='" + (row.less_per_pcs ?? '') + "' class='party_less_post' />" +
     "<input type='hidden' name='invoice_packet_qty[]' value='" + (row.packet_qty ?? '') + "' class='item-qty' />" +
     "<input type='hidden' name='invoice_barcode[]' value='" + (row.barcode ?? '') + "' />" +

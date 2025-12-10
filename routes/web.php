@@ -52,6 +52,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post("item/add",[ItemController::class,"add"])->name("item.post");
     Route::post("item_invoice/add",[ItemInvoiceController::class,"add"])->name("item.invoice.post");
     Route::post("/addComment",[ItemInvoiceController::class,"addComment"])->name("addComment");
+    Route::post('/ajax-delete-item', [purchaseController::class, 'ajaxDelete'])->name('ajax.delete');
 
 
 // ==================== AJAX ====================
@@ -73,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('item.latest_id');
 
     Route::get('/get-item-details', [AjaxController::class, 'getItemDetails'])->name('get.item.details');
+    Route::get('/get-item-details-pur', [purchaseController::class, 'getItemDetails'])->name('get.item.details.pur');
 
 // ==================== ADMIN STATIC VIEWS ====================
     Route::get("sales-man",[salesmanController::class, 'index'])->name("sales-man");
@@ -98,6 +100,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get("purchase-invoice",[purchaseController::class,'index'])->name("purchase-invoice");
     Route::get("getItem/{barcode}",[purchaseController::class,'getItem'])->name("ajax.pur_inv.getItem");
     Route::post('ajax/pur_invoice/pur', [purchaseController::class, 'search_invoice'])->name("ajax.pur_invoice.search");
+    Route::post('ajax/pur_invoice/update_status', [purchaseController::class, 'update_status'])->name("ajax.pur_invoice.update_status");
     Route::post("purchase_invoice/add",[purchaseController::class,"add"])->name("purchase.invoice.post");
     Route::post("delete_purchase_item/delete",[purchaseController::class,"delete_item"])->name("ajax.purchase.delete");
     Route::post("recover_purchase_item/recover",[purchaseController::class,"recover_item"])->name("ajax.purchase.recover");

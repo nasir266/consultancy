@@ -53,6 +53,6 @@ class saleController extends Controller
             ->unique()
             ->values()
             ->toArray();
-        return view("admin.purchase-invoice.purchase-invoice")->with(['banks' => $banks,'bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
+        return view("admin.sale-invoice.sale-invoice")->with(['banks' => $banks,'bill_no' => $bill_no, "search_barcodes" =>$search_barcodes, "search_pic" => $search_pic, "search_purchase_rate" => $search_purchase_rate, "search_define_items" => $search_define_items ,"search_define_sizes" => $search_define_sizes, 'parties' => $parties, 'items'=>$items, 'vr_no' => $vr_no, 'search_names' => $search_names, 'search' => $search, 'bilty_no' => $bilty_no, 'party_inv_no'=>$party_inv_no, 'godown'=>$goddown, 'salesmans' => $salesmans]);
     }
 }

@@ -1,5 +1,12 @@
 @extends('layouts.master')
 @section('styles')
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.default.min.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.min.js"></script>
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <style>
 
@@ -435,7 +442,7 @@
                         id="bill_no"
                         name="bill_no"
                         value="{{ $bill_no }}"
-                        oninput="get_invoice(this.value, 'bill_no')"
+                        oninput="update_status(this.value, 'bill_no')"
                         min="1"
                         max="{{ $bill_no }}"
                         class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
@@ -522,6 +529,7 @@
                     <a
                         target="_blank"
                         href="../party"
+                        id="partySearch"
                         class="block px-4 py-1 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
                     >
                         Add Party
@@ -956,7 +964,7 @@
                           class="block hidden w-full h-full object-cover rounded-md"
                           alt=""
                       />
-                      <span class="text-xs font-medium text-indigo-400 underline"
+                      <span class="text-xs font-medium text-indigo-400 "
                       >Upload Image</span
                       >
                   </label>
@@ -968,7 +976,7 @@
                   >
                       <i class="fa-solid fa-camera text-1xl text-indigo-400"></i>
                       <span
-                          class="block text-xs font-medium text-indigo-400 underline"
+                          class="block text-xs font-medium text-indigo-400 "
                       >Open Camera</span
                       >
                   </button>
@@ -981,7 +989,7 @@
                   >
                       <i class="fa-solid fa-trash text-1xl text-indigo-400"></i>
 
-                      <span class="block text-xs font-medium text-indigo-400 w-20 underline">
+                      <span class="block text-xs font-medium text-indigo-400 w-20">
             Bin
         </span>
 
@@ -993,11 +1001,12 @@
                       class="flex items-center justify-center gap-2 flex-col w-20 cursor-pointer transition-colors hover:bg-indigo-50 h-20 p-2 border-2 border-dashed border-indigo-300 rounded-xl relative"
                       type="button"
                       onclick="openModal(event, 'comment-model')"
-                      style="width: 70px;"
+                      id="reasons"
+                      style="width: 70px; text-decoration: none !important;"
                   >
                       <i class="fa-solid fa-comment text-1xl text-indigo-400"></i>
 
-                      <span class="block text-xs font-medium text-indigo-400 underline">
+                      <span class="block text-xs font-medium text-indigo-400 ">
             Reasons
         </span>
 
@@ -1029,7 +1038,7 @@
                       Payments
                   </button>
 
-                  <button class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600" type="reset" onclick="location.reload();" > <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i> Reset </button>
+                  <button class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600" type="reset" onclick="location.reload();" id="reset_btn"> <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i> Reset </button>
 
                   {{--<button
                     class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
@@ -1047,6 +1056,7 @@
                       Print
                   </button>
                   <button
+                      id="generate_barcode"
                       class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
                       type="button"
                   >
@@ -1057,7 +1067,7 @@
                   <button
                       class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
                       type="button"
-                      onclick="openModal(event, 'update-model')"
+                      onclick="openModalPur(event, 'update-model', 'ud_comment')"
                   >
                       <i data-feather="trash-2" class="w-4 h-4 mr-3"></i>
                       Delete
@@ -1427,7 +1437,7 @@
                             <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="cheque">Cheque</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="bank_transfer">Bank Transfer</a>
+                            <a class="nav-link lbl_stl_2 payment-method" href="#" data-payment-method="bank_transfer">Online Banking</a>
                         </li>
                     </ul>
 
@@ -1449,6 +1459,7 @@
 
                         <!-- Bank Fields (hidden by default) -->
                         <div class="row input-bx payment-field bank mt-2" style="display: none;">
+
                             <div class="col-md-10">
                                 <label for="">Bank</label>
                                 <select class="c_selectize w-full" id="bank" name="bank">
@@ -1461,12 +1472,12 @@
 
                             <div class="col-md-10 mt-2">
                                 <label for="">Account Title</label>
-                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_title" name="bank_account_title" placeholder="Amount">
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_title" name="bank_account_title" placeholder="Account Title">
                             </div>
 
                             <div class="col-md-10 mt-2">
                                 <label for="">Account Number</label>
-                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_number" name="bank_account_number" placeholder="Amount">
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bank_account_number" name="bank_account_number" placeholder="Account No">
                             </div>
 
                             <div class="col-md-10 mt-2">
@@ -1483,10 +1494,13 @@
                         <div class="row input-bx payment-field cheque mt-2" style="display: none;">
                             <div class="col-md-10">
                                 <label for="">Bank</label>
-                                <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:outline-indigo-500 px-4 py-1.5 rounded-md" id="cheque_bank" name="cheque_bank">
+                                <select class="c_selectize w-full" id="cheque_bank" name="cheque_bank">
                                     <option value="">Select Bank</option>
-                                    <option value="Meezan Bank">Meezan Bank</option>
+                                    @foreach($banks as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
                                 </select>
+
                             </div>
                             <div class="col-md-10 mt-2">
                                 <label for="">Amount</label>
@@ -1507,10 +1521,13 @@
                         <div class="row input-bx payment-field bank_transfer mt-2" style="display: none;">
                             <div class="col-md-10">
                                 <label for="">From</label>
-                                <select class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:outline-indigo-500 px-4 py-1.5 rounded-md" id="bt_from" name="bt_from">
+                                <select class="c_selectize w-full" id="bt_from" name="bt_from">
                                     <option value="">Select Bank</option>
-                                    <option value="Meezan Bank">Meezan Bank</option>
+                                    @foreach($banks as $item)
+                                        <option value="{{ $item }}">{{ $item }}</option>
+                                    @endforeach
                                 </select>
+
                             </div>
 
                             <div class="col-md-10 mt-2">
@@ -1526,12 +1543,12 @@
 
                             <div class="col-md-10 mt-2">
                                 <label for="">Account Title</label>
-                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_title" name="bt_account_title" placeholder="Amount">
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_title" name="bt_account_title" placeholder="Account Title">
                             </div>
 
                             <div class="col-md-10 mt-2">
                                 <label for="">Account Number</label>
-                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_number" name="bt_account_number" placeholder="Amount">
+                                <input class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"  type="text" id="bt_account_number" name="bt_account_number" placeholder="Account No">
                             </div>
 
                             <div class="col-md-10 mt-2">
@@ -1942,8 +1959,8 @@
                         <table class="min-w-full text-sm text-left text-gray-700" style="width: 100%">
                             <thead class="bg-gray-100 text-gray-800 uppercase text-xs">
                             <tr>
-                                <th class="px-4 py-3">Date</th>
-                                <th class="px-4 py-3" width="60%">Comment</th>
+                                <th class="px-4 py-3" width="30%">Date</th>
+                                <th class="px-4 py-3" width="45%">Comment</th>
                                 <th class="px-4 py-3">Added By</th>
                                 <th class="px-4 py-3">Type</th>
                             </tr>
@@ -2024,12 +2041,59 @@
     </div>
 
 
+
+
+    <div
+        id="barcode-bulk-model"
+        class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0 model"
+    >
+        <div
+            class="bg-white rounded-lg shadow-lg w-full max-w-[600px] p-4 sm:p-6 overflow-auto max-h-[95vh] transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
+            style="scrollbar-width: none"
+        >
+            <div id="modal-content" class="text-gray-700">
+                <h3 class="text-gray-600 text-xl font-medium mb-6">BarCode</h3>
+                <div
+                    id="r-barcode"
+                    class="flex items-center justify-center gap-4 flex-col transition-colors hover:bg-indigo-50 w-full p-2 py-10 border-2 border-dashed border-indigo-300 rounded-xl"
+                >
+
+                    <div id="barcode_wrapper"></div>
+
+
+                </div>
+            </div>
+            <div class="flex items-center gap-3 justify-end text-sm mt-14">
+                <button
+                    class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
+                    onclick="closeModal(event, 'barcode-bulk-model')"
+                >
+                    Close
+                </button>
+                <button
+                    id="print_bulk_barcode"
+                    class="px-5 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                >
+                    Print
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="{{ asset('assets/js/mult-select.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
     <!-- jsPDF with html plugin -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/printThis/1.15.0/printThis.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('.c_selectize').selectize({
+                create: true,
+                maxItems: 1
+            });
+        });
+    </script>
 
 <script>
 
@@ -2418,7 +2482,7 @@
             //window.alert(total);
             $('#rAmount').val(amount);
             $('#tPcs').val(total);
-            $('#lRate').val(l_rate);
+            //$('#lRate').val(l_rate);
             $('#gAmount').val(grand_amount);
         }
 
@@ -2461,10 +2525,15 @@
                             }
                             //console.log(t_pcs);
                             var amount = parseInt(t_pcs) * parseInt(pur_rate);
-                            var per = amount/100 * party_discount;
-                            var l_rate = pur_rate - (party_less + party_discount);
+                            /*window.alert(t_pcs);
+                            window.alert(pur_rate);
+                            window.alert(amount);
+                            window.alert(pur_rate);*/
+                            var per = (pur_rate/100) * party_discount;
+                           //window.alert(per);
+                            var l_rate = pur_rate - (party_less + per);
                             l_rate = parseFloat(l_rate).toFixed(2);
-                            //window.alert(l_rate);
+
                             var grand_amount =  parseInt(t_pcs) * l_rate;
                            $('#rAmount').val(amount);
                            $('#rDics').val(data.party_discount);
@@ -2532,11 +2601,12 @@
             if(isNaN(rDics)){
                 rDics = 0;
             }
-            var rDics_val = pRate/100 * rDics;
+            var rDics_val = (pRate/100) * rDics;
             rDics_val = parseFloat(rDics_val).toFixed(2);
             if(rDics_val == null || isNaN(rDics_val)){
                 rDics_val = 0;
             }
+            //window.alert(rDics_val);
 
             var lRate = pRate - (parseFloat(rLess) + parseFloat(rDics_val));
             lRate = parseFloat(lRate).toFixed(2);
@@ -2631,7 +2701,6 @@
             var str = th.id;
             let parts = str.split('-');
             let rowNo = parts[1];
-
             var tableQty = document.getElementById('tableQty-'+rowNo).innerHTML;
             var tableLess = document.getElementById('tableLess-'+rowNo).innerHTML;
             var tablePkt = document.getElementById('tablePkt-'+rowNo).innerHTML;
@@ -2655,13 +2724,14 @@
             }
 
             var totalPcs = tableQty*tablePkt;
-            //window.alert(totalPcs);
             var amount = totalPcs * tablepRate;
+
             var lRate = tablepRate - (parseInt(tableLess) + parseInt(tableDisc));
+
             lRate = parseFloat(lRate).toFixed(2);
-            if(isNaN(lRate)){
+            /*if(isNaN(lRate)){
                 lRate = 0;
-            }
+            }*/
             document.getElementById('itableQty-'+rowNo).value = tableQty;
             document.getElementById('itablePkt-'+rowNo).value = tablePkt;
             //document.getElementById('tableLess-'+rowNo).innerHTML = tableLess;
@@ -2676,17 +2746,21 @@
             /*document.getElementById('tablelRate-'+rowNo).innerHTML = lRate;
             document.getElementById('itablelRate-'+rowNo).value = lRate;*/
 
-            document.getElementById('itablelRate-'+rowNo).value = tablepRate - (tableLess + tableDisc);
-            document.getElementById('tablelRate-'+rowNo).innerHTML = tablepRate - (tableLess + tableDisc);
+            document.getElementById('itablelRate-'+rowNo).value = parseFloat(lRate).toFixed(2);
+            document.getElementById('tablelRate-'+rowNo).innerHTML = parseFloat(lRate).toFixed(2);
 
-            document.getElementById('tablegAmount-'+rowNo).innerHTML = amount - ((totalPcs * tableLess) + (totalPcs * tableDisc));
-            document.getElementById('itablegAmount-'+rowNo).value = amount - ((totalPcs * tableLess) + (totalPcs * tableDisc));
+            document.getElementById('tablegAmount-'+rowNo).innerHTML = amount - ((totalPcs * tableLess) + (totalPcs * tableDisc)).toFixed(2);
+            document.getElementById('itablegAmount-'+rowNo).value = amount - ((totalPcs * tableLess) + (totalPcs * tableDisc)).toFixed(2);
 
-            document.getElementById('tableTotalLess-'+rowNo).innerHTML = (totalPcs * tableLess) + (totalPcs * tableDisc);
-            document.getElementById('itableTotalLess-'+rowNo).value = (totalPcs * tableLess) + (totalPcs * tableDisc);
+            document.getElementById('tableTotalLess-'+rowNo).innerHTML = (totalPcs * tableLess) + (totalPcs * tableDisc).toFixed(2);
+            document.getElementById('itableTotalLess-'+rowNo).value = (totalPcs * tableLess) + (totalPcs * tableDisc).toFixed(2);
 
-            document.getElementById('tableTotalDisc-'+rowNo).innerHTML = ((totalPcs * tableLess) + (totalPcs * tableDisc))/amount * 100;
-            document.getElementById('itableTotalDisc-'+rowNo).value = ((totalPcs * tableLess) + (totalPcs * tableDisc))/amount * 100;
+            var t_disc = (((totalPcs * tableLess) + (totalPcs * tableDisc))/amount * 100).toFixed(2);
+            if(isNaN(t_disc)){
+                t_disc = 0;
+            }
+            document.getElementById('tableTotalDisc-'+rowNo).innerHTML = t_disc;
+            document.getElementById('itableTotalDisc-'+rowNo).value = t_disc;
             calcTable();
 
         }
@@ -2709,15 +2783,12 @@
             // also reset serial counter
             serial = rows.length;
         }
-        function disableAllExceptOne(formId, exceptId) {
-            // Get form
+        /*function disableAllExceptOne(formId, exceptId) {
             let form = document.getElementById(formId);
 
-            // Get all input/select/textarea inside the form
-            let fields = form.querySelectorAll("input, select, textarea, button");
+            let fields = form.querySelectorAll("input, select, textarea, button, a, [contenteditable]");
 
             fields.forEach(function(field) {
-                // Disable all except the target field
                 if (field.id !== exceptId) {
                     field.disabled = true;
                     field.style.border = "2px solid red";
@@ -2727,8 +2798,102 @@
                     field.style.border = "";
                     field.style.backgroundColor = '';
                 }
+                if ($(field).hasClass("c_selectize")) {
+                    let selectize = $(field)[0].selectize;
+                    if (selectize) {
+                        selectize.disable();
+                    }
+                }
+                if (field.hasAttribute("contenteditable")) {
+                    field.setAttribute("contenteditable", "false");
+                    field.style.opacity = "0.6";
+                }
+            });
+        }*/
+        function disableAllExceptOne(formId, exceptId) {
+
+            let form = document.getElementById(formId);
+
+            // Select everything including contenteditable + anchor tags
+            let fields = form.querySelectorAll("input, select, textarea, button, a, [contenteditable]");
+
+            fields.forEach(function(field) {
+
+                // fields we NEVER disable
+                let alwaysEnabled = ["reasons", "partySearch", "reset_btn", exceptId];
+
+                let isExcept = alwaysEnabled.includes(field.id);
+
+                if (!isExcept) {
+
+                    // Disable normal inputs, selects, textarea, buttons
+                    if (field.tagName.match(/INPUT|SELECT|TEXTAREA|BUTTON/)) {
+                        field.disabled = true;
+                    }
+
+                    // Disable <a> links
+                    if (field.tagName.toLowerCase() === "a") {
+                        field.style.pointerEvents = "none";
+                        field.style.opacity = "0.5";
+                    }
+
+                    // Disable Selectize dropdown
+                    if ($(field).hasClass("selectize-input-sp")) {
+                        let selectize = $(field)[0].selectize;
+                        if (selectize) {
+                            selectize.disable();
+                        }
+                    }
+
+                    // Disable contenteditable fields
+                    if (field.hasAttribute("contenteditable")) {
+                        field.setAttribute("contenteditable", "false");
+                        field.style.opacity = "0.6";
+                        field.style.backgroundColor = "#ddd";
+                    }
+
+                    // Styling
+                    field.style.border = "2px solid #ddd";
+                    field.style.backgroundColor = "#ddd";
+
+                } else {
+
+                    // Enable normal controls
+                    if (field.tagName.match(/INPUT|SELECT|TEXTAREA|BUTTON/)) {
+                        field.disabled = false;
+                    }
+
+                    // Enable <a>
+                    if (field.tagName.toLowerCase() === "a") {
+                        field.style.pointerEvents = "auto";
+                        field.style.opacity = "1";
+                    }
+
+                    // Enable Selectize
+                    if ($(field).hasClass("selectize-input-sp")) {
+                        let selectize = $(field)[0].selectize;
+                        if (selectize) {
+                            selectize.disable();
+                        }
+                    }
+
+                    // Enable contenteditable again
+                    document.querySelectorAll('.main-table *').forEach(el => {
+                        el.contentEditable = "false";                // use the property (reliable)
+                        el.setAttribute('contenteditable', 'false'); // also set attribute (safe)
+                        el.style.opacity = '0.6';
+                        // use setProperty with important in case CSS overrides inline style
+                        el.style.setProperty('background-color', '#b5b5b5', 'important');
+                        // optional: prevent keyboard input
+                        el.addEventListener('keydown', e => e.preventDefault(), { once: false });
+                    });
+
+                    field.style.border = "";
+                    field.style.backgroundColor = "";
+                }
             });
         }
+
         function enableInvoiceForm(form_id) {
             let form = document.getElementById(form_id);
 
@@ -2740,7 +2905,28 @@
                 field.style.backgroundColor = '';
             });
         }
+        function update_status(value, type) {
+            $('#loader').show();
+            $.ajax({
+                url: "{{ route('ajax.pur_invoice.update_status') }}",
+                type: 'POST',
+                data: {
+                    '_token': "{{ csrf_token() }}",
+                    value: value,
+                    type: type,
+                },
+                success: function (response) {
+                    get_invoice(value, type);
+                    $('#loader').hide();
+                },
+                error: function (xhr, status, error) {
+                    console.log(error);
+                }
+            });
+        }
+
         function get_invoice(value, type) {
+
             var pass_value = value;
             var pass_type = type;
             //window.alert(pass_type);
@@ -2762,10 +2948,17 @@
                                 var comment_counter = 0;
                                 response.comments.forEach(function(c) {
                                     //console.log("Comment:", c.comment);
-                                    const dateOnly = new Date(c.created_at).toLocaleDateString();
+                                    const d = new Date(c.created_at);
+
+                                    const time = d.toLocaleTimeString([], {
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    });
+
+                                    const date = d.toLocaleDateString();
                                     row += `
                                     <tr>
-                                    <td class="px-4 py-3">${dateOnly}</td>
+                                    <td class="px-4 py-3">${date} ${time}</td>
                                     <td class="px-4 py-3" width="70%">${c.comment}</td>
                                     <td class="px-4 py-3">${c.user_name}</td>
                                     <td class="px-4 py-3">${c.type}</td>
@@ -2849,17 +3042,12 @@
                             var no =1;
                             for (var i = 0; i < items.length; i++) {
                                 var row = items[i];
-                                //console.log(row);
+
                                 if(row.party_discount === null){
                                     var dis = 0;
                                 }else{
                                     var dis = row.party_discount;
                                 }
-                                /*if(data.invoice.godown !== null){
-                                    var godown = data.invoice.godown.name;
-                                }else{
-                                    var godown = '';
-                                }*/
                                 var party_discount =dis;
                                 var barcode = row.barcode;
                                 var partyItemCode = row.item_code;
@@ -2890,7 +3078,7 @@
                                 //console.log(row.total_less/row.amount);
 
                                 var perAgeDis = (row.total_less/row.amount) *100;
-                                perAgeDis = perAgeDis.toFixed(3);
+                                perAgeDis = perAgeDis.toFixed(2);
                                 if(isNaN(perAgeDis)){
                                     perAgeDis = 0.00;
                                 }
@@ -2917,8 +3105,9 @@
                                     t_amrgin = 0.00;
                                 }
                                 var row_id = row.id;
-                                if(row.status != 1){
-                                    if(row.status == 2){
+                                //window.alert(row.status);
+                                if(row.status == 0 || row.status == 3 || row.status == null){
+                                    if(row.status == 3){
                                         var sty = "style='background-color: #DFE2ED;'";
                                     }else{
                                         var sty = "style='background-color: #FFFFFF;'";
@@ -2926,11 +3115,11 @@
                                     //window.alert('in row');
                                     var newRow =
                                         "<tr "+sty+">" +
-                                        "<input type='hidden' name='invoice_party_less_total[]' id='tableLess-"+table_id+"' value='" + (row.party_less_total ?? '') + "' />" +
+                                        "<input type='hidden' name='invoice_party_less_total[]' id='iitableLess-"+table_id+"' value='" + (row.party_less_total ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_total_discount[]' value='" + (row.party_total_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_discount[]' value='" + (row.party_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_margin_field[]' value='" + (row.margin_field ?? '') + "' />" +
-                                        "<input type='hidden' name='item_id[]' value='" + (row.item_id ?? '') + "' class='item-id' />" +
+                                        "<input type='hidden' name='item_id[]' value='" + (row.barcode ?? '') + "' class='item-id' />" +
                                         "<input type='hidden' name='invoice_party_less_per_pcs[]' id='itableLess-"+table_id+"' value='" + (row.less_per_pcs ?? '') + "' class='party_less_post' />" +
                                         "<input type='hidden' name='invoice_packet_qty[]' id='itableQty-"+table_id+"' value='" + (row.packet_qty ?? '') + "' class='item-qty' />" +
                                         "<input type='hidden' name='invoice_barcode[]' value='" + (row.barcode ?? '') + "' />" +
@@ -2946,7 +3135,6 @@
                                         "<input type='hidden' name='invoice_gross_amount[]' id='itablegAmount-"+table_id+"' value='" + (row.gross_amount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_margin[]' value='" + (row.margin ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_total_margin[]' value='" + (row.total_margin ?? '') + "' />" +
-                                        "<input type='hidden' name='invoice_total_less[]' id='itableTotalLess-"+table_id+"' value='" + (g_total.toFixed(2) ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_total_less[]' id='itableTotalLess-"+table_id+"' value='" + (g_total.toFixed(2) ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_total_dis_percent[]' id='itableTotalDisc-"+table_id+"' value='" + (perAgeDis ?? '') + "' />" +
 
@@ -2978,7 +3166,7 @@
                                         "<input type='hidden' name='invoice_party_total_discount[]' value='" + (row.party_total_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_discount[]' value='" + (row.party_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_margin_field[]' value='" + (row.margin_field ?? '') + "' />" +
-                                        "<input type='hidden' name='item_id[]' value='" + (row.item_id ?? '') + "' class='item-id' />" +
+                                        "<input type='hidden' name='item_id[]' value='" + (row.id ?? '') + "' class='item-id' />" +
                                         "<input type='hidden' name='invoice_party_less_per_pcs[]' value='" + (row.less_per_pcs ?? '') + "' class='party_less_post' />" +
                                         "<input type='hidden' name='invoice_packet_qty[]' value='" + (row.packet_qty ?? '') + "' class='item-qty' />" +
                                         "<input type='hidden' name='invoice_barcode[]' value='" + (row.barcode ?? '') + "' />" +
@@ -3015,12 +3203,11 @@
                                         "<td >" + (row.total_margin ?? '-') + "</td>" +
                                         "<td  id='tableTotalLess-"+table_id+"'>" + (g_total.toFixed(2) ?? '-') + "</td>" +
                                         "<td  id='tableTotalDisc-"+table_id+"'>" + (perAgeDis ?? '-') + "</td>" +
-                                        "<td><i onclick='recover_row(this, "+row_id+", "+pass_value+",  \"" + pass_type + "\")' class='fas fa-trash-restore text-danger del-icon'></i></td>" +
+                                        "<td><button onclick='recover_row(this, "+row_id+", "+pass_value+", \"" + pass_type + "\")' class='btn btn-sm btn-warning'>Recover </button> </td>" +
                                         "</tr>";
                                     $(".bin-table tbody").append(bin_array);
                                     bin_counter++;
                                 }
-
                                 const tableContainer = document.getElementById('tableContainer');
                                 tableContainer.scrollTop = tableContainer.scrollHeight;
 
@@ -3053,19 +3240,24 @@
                             var t_profit = grand_amount/t_amount * 100;
                             $("#total_profit2").val(t_profit.toFixed(3) + "% | " + grand_amount);*/
                             calcTable();
-                            var t_amount = data.invoice.amount;
+                            /*var t_amount = data.invoice.amount;
                             var g_per = (t_disc/t_amount) * 100;
                             $('#total_less').val(t_less);
                             $('#total_disc').val(g_per.toFixed(2) + '% |' +t_disc.toFixed(2));
                             var grand_less = t_less + t_disc;
                             var grand_per = grand_less/t_amount * 100;
-                            $('#total_less2').val(grand_per.toFixed(2) + '% |' +grand_less.toFixed(2));
+                            $('#total_less2').val(grand_per.toFixed(2) + '% |' +grand_less.toFixed(2));*/
                         }
                     },
                 error: function(xhr, status, error) {
                     console.log(error);
                 }
             });
+        }
+
+
+        function deleteItemAjax(data, id, value, pass_type){
+
         }
         /*$('#invoice_form').on('submit', function(e) {
             let invoice_id = $("#invoice_id").val();
@@ -3234,7 +3426,7 @@
             } else {
                 $('#ud_check').val('update');
                 $('#ud_type').val('update');
-                openModal(event, 'update-model');
+                openModalPur(event, 'update-model', 'ud_comment');
                 return false;
             }
         });
@@ -3253,6 +3445,7 @@
                     updateSerials();
                     get_invoice(value, pass_type);
                     get_invoice(id, 'invoice_list');
+
                     $('#loader').hide();
                     console.log(response);
                 }
@@ -3310,7 +3503,24 @@
                 }
             });
         }
+        function openModalPur(event, id, focus_id) {
+            let timer;
+            clearTimeout(timer)
 
+            const modal = document.getElementById(id);
+            document.getElementById(focus_id).focus();
+            modal.classList.remove("hidden");
+            timer = setTimeout(() => {
+                modal.classList.remove("opacity-0");
+                modal.classList.add("opacity-100");
+            }, 200);
+
+            const firstInput = modal.querySelector("input, textarea");
+            if (firstInput) {
+                firstInput.focus();
+            }
+
+        }
         function calcTable() {
             var sum = 0;
             $('.pkt_table').each(function() {
@@ -3694,15 +3904,363 @@
                 calcTable();
                 closeModal(event, 'payment-method-model')
             });
+
         });
     </script>
 
-   {{-- <script>
-        $(".c_selectize").selectize({
-            create: true,
-            maxItems: 1,
+    <script>
+
+        jQuery(document).ready(function () {
+
+            function getItemDetails(itemId) {
+                return new Promise(function (resolve, reject) {
+                    jQuery.ajax({
+                        url: "{{ route('get.item.details.pur') }}",
+                        method: "GET",
+                        data: { id: itemId },
+                        success: function (response) {
+                            resolve(response);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error('Error fetching item:', error);
+                            reject(error);
+                        }
+                    });
+                });
+            }
+
+            function generateBarcodeHTML2(item, size, index) {
+                let html = '';
+                switch (size) {
+                    case "size_1":
+                        html += `
+                <div class="barcode-image-section size_1 bq-inner-box">
+                    <div class="barcode-item-wrapper">
+                        <p class="barcode-item-description">
+                            <span class="barcode_name">${item.name}</span> (${item.size})
+                        </p>
+                        <span class="barcode-image-main barcode-image-size">
+
+                             <img src="{{ asset('assets/img/barcode_1.png') }}" class="barcode-img">
+                            <span class="barcode-image-desc-left">
+                                <h3 id="barcode_ptc">${item.code}</h3>
+                            </span>
+                            <span class="barcode-image-desc-right">
+                                <h3>NNG <span>${item.sale_rate}</span></h3>
+                            </span>
+                            <span class="barcode-image-desc-bottom">
+                                <h3>${item.barcode}</h3>
+                            </span>
+                        </span>
+                    </div>
+                </div>`;
+                        break;
+                    case "size_2":
+                        /*<img src="" class="qr-img">*/
+
+                        html += `
+                <div class="qr-image-section size_2 bq-inner-box">
+                    <div class="qr-item">
+                        <p class="qr-description">
+                            <span>${item.item_name}</span> (${item.size})
+                        </p>
+                        <h3 class="qr-code-text" id="barcode_ptc">${item.barcode}</h3>
+                        <h3 class="qr-price">
+                            <strong>NNG <span>${item.sale_rate}</span></strong>
+                        </h3>
+                        <img src="{{ asset('assets/img/qrcode_1.png') }}" class="qr-img">
+                        <h3 class="qr-barcode">${item.barcode}</h3>
+                    </div>
+                </div>`;
+                        break;
+                    case "size_3":
+                        html += `
+               <div class="barcode-image-section size_3 bq-inner-box">
+<div class="barcode-item">
+  <p class="barcode-description">
+    <span id="barcode_item">${item.name}</span>
+    (<span id="barcode_size">${item.size}</span>)
+  </p>
+
+  <span class="barcode-image-main">
+    <img src="{{ asset('assets/img/barcode_2.png') }}" alt="barcode" class="barcode-img">
+
+    <span class="barcode-image-desc-left">
+      <h3 id="barcode_ptc">${item.code}</h3>
+    </span>
+
+    <span class="barcode-image-desc-right">
+      <h3 id="barcode_price">NNG <span id="barcode_sale_rate">${item.sale_rate}</span></h3>
+    </span>
+
+    <span class="barcode-image-desc-bottom">
+      <h3 id="barcode_barcode">${item.barcode}</h3>
+    </span>
+  </span>
+</div>
+</div>`;
+                        break;
+                    case "size_4":
+                        let qrId = "qr_" + item.barcode;
+                        let str = item.item_name;
+                        let parts = str.split("-");
+                        let name = parts[1] + "-" + parts[2];
+                        //console.log(name);
+                        html += `
+               <div class="qr-image-section size_4 bq-inner-box">
+<div class="qr-item">
+  <p class="qr-title">
+    <span id="barcode_item">${name}</span>
+    (<span id="barocde_size">${item.size}</span>)
+  </p>
+
+  <h3 class="qr-code" id="barcode_ptc">${item.code}</h3>
+
+
+
+
+
+<h3 class="qr-price">
+    <strong>NNG <br><span id="barcode_sale_rate">${item.sale_rate}</span></strong>
+  </h3>
+
+<span id="${qrId}" class="qr-img" ></span>
+
+  <h3 class="qr-barcode" id="barcode_barcode">${item.barcode}</h3>
+
+
+</div>
+</div>`;
+
+                        break;
+                }
+
+                return html;
+            }
+
+
+            function generateBarcodeHTML(item, size) {
+                let html = '';
+                switch (size) {
+                    case "size_1":
+                        html = `
+                <div class="barcode-image-section size_1 bq-inner-box">
+                    <div class="barcode-item-wrapper">
+                        <p class="barcode-item-description">
+                            <span class="barcode_name">${item.name}</span> (${item.size})
+                        </p>
+                        <span class="barcode-image-main barcode-image-size">
+                            <img src="{{ asset('assets/img/barcode_1.png') }}" class="barcode-img">
+                            <span class="barcode-image-desc-left">
+                                <h3 id="barcode_ptc">${item.code}</h3>
+                            </span>
+                            <span class="barcode-image-desc-right">
+                                <h3>NNG <span>${item.sale_rate}</span></h3>
+                            </span>
+                            <span class="barcode-image-desc-bottom">
+                                <h3>${item.barcode}</h3>
+                            </span>
+                        </span>
+                    </div>
+                </div>`;
+                        break;
+                    case "size_2":
+                        html = `
+                <div class="qr-image-section size_2 bq-inner-box">
+                    <div class="qr-item">
+                        <p class="qr-description">
+                            <span>${item.name}</span> (${item.size})
+                        </p>
+                        <h3 class="qr-code-text" id="barcode_ptc">${item.code}</h3>
+                        <h3 class="qr-price">
+                            <strong>NNG <span>${item.sale_rate}</span></strong>
+                        </h3>
+                        <img src="{{ asset('assets/img/qrcode_1.png') }}" class="qr-img">
+                        <h3 class="qr-barcode">${item.barcode}</h3>
+                    </div>
+                </div>`;
+                    case "size_3":
+                        html = `
+               <div class="barcode-image-section size_3 bq-inner-box">
+<div class="barcode-item">
+  <p class="barcode-description">
+    <span id="barcode_item">${item.name}</span>
+    (<span id="barcode_size">${item.size}</span>)
+  </p>
+
+  <span class="barcode-image-main">
+    <img src="{{ asset('assets/img/barcode_2.png') }}" alt="barcode" class="barcode-img">
+
+    <span class="barcode-image-desc-left">
+      <h3 id="barcode_ptc">${item.code}</h3>
+    </span>
+
+    <span class="barcode-image-desc-right">
+      <h3 id="barcode_price">NNG <span id="barcode_sale_rate">${item.sale_rate}</span></h3>
+    </span>
+
+    <span class="barcode-image-desc-bottom">
+      <h3 id="barcode_barcode">${item.barcode}</h3>
+    </span>
+  </span>
+</div>
+</div>`;
+                    case "size_4":
+                        html = `
+               <div class="qr-image-section size_4 bq-inner-box">
+<div class="qr-item">
+  <p class="qr-title">
+    <span id="barcode_item">${item.name}</span>
+    (<span id="barocde_size">${item.size}</span>)
+  </p>
+
+  <h3 class="qr-code" id="barcode_ptc">${item.code}</h3>
+
+  <h3 class="qr-price">
+    <strong>NNG <br><span id="barcode_sale_rate">${item.sale_rate}</span></strong>
+  </h3>
+
+  <img src="{{ asset('assets/img/qrcode_2.png') }}" alt="qr" class="qr-image">
+
+  <h3 class="qr-barcode" id="barcode_barcode">${item.barcode}</h3>
+</div>
+</div>`;
+
+
+                        break;
+                    // Add size_3 and size_4 if needed
+                }
+
+                return html;
+            }
+
+            async function renderBarcodes(itemIds, itemQtys) {
+                let size = "{{ $setting->barcode }}";
+                jQuery('#barcode_wrapper').html(''); // Clear
+                showLoader(); // ⬅️ Show global loader
+                var bulk_type = jQuery('input[name="bulk_type"]:checked').val();
+
+                for (let index = 0; index < itemIds.length; index++) {
+                    let itemId = itemIds[index];
+                    let qty = parseInt(itemQtys[index]);
+
+                    let item = await getItemDetails(itemId); // Waits for item details in order
+
+
+                    if(bulk_type == "bulk_double"){
+
+                        for (let i = 0; i < qty; i += 2) {
+                            let html = `<div style="margin-left: 0.1cm; margin-top: 0.01cm; display: flex; gap: 0.3cm;">`;
+
+                            html += generateBarcodeHTML2(item, size, i);
+
+                            // Duplicate the item logic if the second exists
+                            if (i + 1 < qty) {
+                                html += generateBarcodeHTML2(item, size, i + 1);
+                            }
+
+                            html += `</div>`;
+
+                            jQuery('#barcode_wrapper').append(html);
+
+
+                        }
+
+                    }else{
+
+                        for (let i = 0; i < qty; i++) {
+
+
+                            let html = generateBarcodeHTML2(item, size,i);
+                            jQuery('#barcode_wrapper').append(html);
+                        }
+                    }
+
+                }
+
+                hideLoader(); // ⬅️ Hide loader after all done
+
+                if(jQuery('input[name="bulk_status"]:checked').val() == "bulk_print"){
+                    $("#print_bulk_barcode").click();
+                }else{
+                    openModal(event, 'barcode-bulk-model');
+                }
+
+            }
+
+
+            // Example trigger
+            jQuery('#generate_barcode').on('click', function () {
+                let itemIds = [];
+                let itemQtys = [];
+
+                jQuery('.item-id').each(function () {
+                    itemIds.push(jQuery(this).val());
+                });
+
+                jQuery('.item-qty').each(function () {
+                    itemQtys.push(jQuery(this).val());
+                });
+
+                console.log("---");
+                console.log(itemIds);
+                console.log(itemQtys);
+
+                renderBarcodes(itemIds, itemQtys);
+            });
         });
-    </script>--}}
+
+
+
+        jQuery('#print_bulk_barcode').on('click', function () {
+
+            var option = 'double'
+            var $content = jQuery('#barcode_wrapper');
+
+            if (!option || $content.length === 0) {
+                alert("Please make sure a barcode option is selected and content exists.");
+                return;
+            }
+            var printWindow = window.open('', '_blank');
+            printWindow.document.write('<html><head><title>Print Barcode</title>');
+
+            printWindow.document.write('<link rel="stylesheet" href="{{ asset('assets/css/barcode.css?v=4') }}" type="text/css">');
+            printWindow.document.write('<style>body{margin:0px, 0px, 0px, 8px;padding:0;font-family:sans-serif;}.qr-item{ margin-left: 0px !important; }.qr-title { margin-top: 0px;}blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre { margin: 0;}.qr-img {position: absolute;margin-top: -47px;margin-left: 55px;}.size_4 .qr-barcode{position: absolute !important;left: 70% !important;bottom: 35px !important;font-weight: bolder !important;font-size: 13px !important;margin-bottom: 0 !important;writing-mode: vertical-lr !important;transform: rotate(180deg) !important;} </style>');
+
+            printWindow.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>');
+
+            printWindow.document.write('</head><body>');
+
+            if (option === 'single') {
+                printWindow.document.write($content.prop('outerHTML'));
+            } else if (option === 'double') {
+                var html = $content.prop('outerHTML');
+                printWindow.document.write(html);
+            }
+            printWindow.document.write(`
+                <script>
+                     window.onload = function() {
+                        document.querySelectorAll(".qr-img").forEach(function(div) {
+                        let text = div.closest(".qr-item").querySelector(".qr-barcode").innerText;
+                        new QRCode(div, { text: text, width: 40, height: 40 });
+                        });
+                    };
+                <\/script>
+            `);
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.focus();
+
+            setTimeout(function() {
+                printWindow.print();
+            }, 500);
+
+        });
+
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
 @endsection
 
 
