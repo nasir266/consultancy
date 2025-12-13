@@ -1739,6 +1739,8 @@
                         </button>
                     </div>
                 </div>
+
+                <input type="hidden" name="action_type" id="action_type" value="save">
             </from>
             <div class="flex gap-3 flex-wrap sm:flex-nowrap items-end overflow-x-auto pb-3">
                 <div class="flex-grow flex-shrink-0" style="height: 200px;">

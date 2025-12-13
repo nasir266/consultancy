@@ -29,7 +29,6 @@ class purchaseController extends Controller
             ->latest('id')
             ->value('vr_no');
         $vr_no = $vr_no ? $vr_no + 1 : 1;
-
         $party_inv_no = ItemInvoice::latest('id')->value('party_inv_no');
         /*if((int)$party_inv_no == 0){
             $party_inv_no = 1;
@@ -210,6 +209,141 @@ class purchaseController extends Controller
                 ['bill_no' => $request->bill_no],
                 $data
             );
+
+
+
+
+            if ($request->item_id && !empty($request->item_id)) {
+
+                // Fetch existing items for this invoice
+                $existingItems = ItemInvoiceList::where('item_invoice_id', $record->id)
+                    ->get()
+                    ->keyBy('item_id'); // key by item_id for easy lookup
+
+                foreach ($request->item_id as $index => $item_id) {
+
+                    // Prepare common data
+                    $itemData = [
+                        'barcode'                => $request->invoice_barcode[$index] ?? null,
+                        'party_item_code'        => $request->invoice_party_item_code[$index] ?? null,
+                        'description'            => $request->invoice_description[$index] ?? null,
+                        'godown'                 => $request->invoice_godown[$index] ?? null,
+                        'packet_qty'             => $request->invoice_packet_qty[$index] ?? null,
+                        'pieces_in_packet'       => $request->invoice_pieces_in_packet[$index] ?? null,
+                        'total_pcs'              => $request->invoice_total_pcs[$index] ?? null,
+                        'purchase_rate'          => $request->invoice_purchase_rate[$index] ?? null,
+                        'amount'                 => $request->invoice_amount[$index] ?? null,
+                        'less_per_pcs'           => $request->invoice_less_per_pcs[$index] ?? null,
+                        'discount_per_pcs'       => $request->invoice_discount_per_pcs[$index] ?? null,
+                        'l_rate'                 => $request->invoice_l_rate[$index] ?? null,
+                        'gross_amount'           => $request->invoice_gross_amount[$index] ?? null,
+                        'total_less'             => $request->invoice_total_less[$index] ?? null,
+                        'total_discount_percent' => $request->invoice_total_dis_percent[$index] ?? null,
+                        'party_less_total'       => $request->invoice_party_less_total[$index] ?? null,
+                        'party_total_discount'   => $request->invoice_party_total_discount[$index] ?? null,
+                        'party_discount'         => $request->invoice_party_discount[$index] ?? null,
+                        'margin'                 => $request->invoice_margin[$index] ?? null,
+                        'total_margin'           => $request->invoice_total_margin[$index] ?? null,
+                        'status'                 => $request->invoice_status[$index] ?? 0,
+                    ];
+
+                    $currentStatus = $existingItems->has($item_id)
+                        ? $existingItems[$item_id]->status
+                        : 0; // new item
+
+// Determine next status based on action
+                    if (!$existingItems->has($item_id)) {
+                        // New item inserted from form click → status = 1
+                        $newStatus = 1;
+                    } else {
+                        // Existing item → check current status
+                        $newStatus = match ($currentStatus) {
+                            1 => 2, // update after first click
+                            2 => 3, // recover
+                            3 => 4, // update after recover
+                            4 => 4, // max status
+                            default => 1, // fallback
+                        };
+                    }
+
+// Now use $newStatus in update or create
+                    if ($existingItems->has($item_id)) {
+                        $existingItems[$item_id]->update(array_merge($itemData, ['status' => $newStatus]));
+                    } else {
+                        ItemInvoiceList::create(array_merge($itemData, [
+                            'item_invoice_id' => $record->id,
+                            'item_id'         => $item_id,
+                            'status'          => $newStatus
+                        ]));
+                    }
+
+                }
+            }
+
+
+            //return print_r($data);
+            //Session::flash("success","Invoice Added Successfuly!");
+            return response()->json(['success' => true], 201);
+        }catch(Exception $e){
+            Session::flash("error",$e->getMessage());
+            return redirect("/employee-types/add");
+        }
+    }
+    /*function add(Request $request){
+        //print_r($request->all());
+
+
+        try{
+            $data = [
+                'sal_id' => $request->salesman_id,
+                'date' => $request->current_date,
+                'bill_no' => $request->bill_no,
+                'vr_no' => $request->vr_no,
+                'party_inv_date' => $request->party_inv_date,
+                'party_inv_no' => $request->party_inv_no,
+                'bilty_no' => $request->bilty_no,
+                'remarks' => $request->remarks ?? null,
+                'pkt_qty' => $request->total_pkt,
+                'total_pcs' => $request->total_piec,
+                'amount' => $request->total_amount,
+                'less' => $request->total_less,
+                'g_amount' => $request->total_gamount,
+                'inv_disc_perc' => $request->inv_disc_perc,
+                'disc_perc' => $request->total_disc,
+                'net_amount' => $request->net_amount,
+                'freight' => $request->freight,
+                'paid_amount' => $request->paid_amount,
+                'total_less' => $request->total_less2,
+                'total_amount' => $request->total_amount2,
+                'payment_status' => $request->payment_status ?? 'unpaid',
+                'godown_id' => $request->godown,
+                'salesman_id' => $request->salesman_id,
+                'cash_amount' => $request->cash_amount,
+                'cash_remarks' => $request->cash_remarks,
+                'bank' => $request->bank,
+                'bank_account_title' => $request->bank_account_title,
+                'bank_account_number' => $request->bank_account_number,
+                'bank_amount' => $request->bank_amount,
+                'bank_remarks' => $request->bank_remarks,
+                'cheque_bank' => $request->cheque_bank,
+                'cheque_amount' => $request->cheque_amount,
+                'cheque_date' => $request->cheque_date,
+                'cheque_remarks' => $request->cheque_remarks,
+                'bt_from' => $request->bt_from,
+                'bt_to' => $request->bt_to,
+                'bt_account_title' => $request->bt_account_title,
+                'bt_account_number' => $request->bt_account_number,
+                'bt_amount' => $request->bt_amount,
+                'bt_remarks' => $request->bt_remarks,
+                'payment_total_amount' => $request->payment_total_amount,
+                'party_id' => $request->party_id,
+            ];
+
+
+            $record = ItemInvoice::updateOrCreate(
+                ['bill_no' => $request->bill_no],
+                $data
+            );
             ItemInvoiceList::where('item_invoice_id', $record->id)
                 ->where('status', 1)
                 ->update(['status' => 2]);
@@ -270,7 +404,7 @@ class purchaseController extends Controller
             Session::flash("error",$e->getMessage());
             return redirect("/employee-types/add");
         }
-    }
+    }*/
 
     public function delete_item(Request $request)
     {
