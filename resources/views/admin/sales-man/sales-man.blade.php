@@ -1,6 +1,6 @@
 @extends('layouts.master')
 
-@section('title','Sales Man')
+@section('title','Salesman')
 
 {{--@section('links')
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -27,6 +27,7 @@
                 id="date"
                 type="date"
                 name="date"
+                value="{{ now()->format('Y-m-d') }}"
                 class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
                 required
               />
@@ -41,8 +42,12 @@
                 class="selectize-input-sp flex-1"
                 name="search"
                 id="search"
+                onchange="get_id_item(this.value,'id')"
               >
                 <option value="">Search</option>
+                  @foreach($salesmans as $salesman)
+                      <option value="{{ $salesman->id }}">{{ $salesman->name }}</option>
+                  @endforeach
               </select>
             </div>
             <div class="max-w-[220px]">
@@ -241,7 +246,13 @@ $(document).ready(function () {
                $("#submit-btn").attr("disabled", false).text("Save");
                //var data = JSON.parse(response);
                console.log(response);
-               toastr.success('Data has submitted!', 'Success', { timeOut: 600, onHidden: 1000 });
+               toastr.success('Data has submitted!', 'Success', {
+                   timeOut: 600,
+                   onHidden: function() {
+                       location.reload();
+                   }
+               });
+               //toastr.success('Data has submitted!', 'Success', { timeOut: 600, onHidden: 1000 });
                // Optionally, reset the form
               // $('#myForm')[0].reset();
            },

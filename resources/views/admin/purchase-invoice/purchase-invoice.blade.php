@@ -459,7 +459,6 @@
                         type="number"
                         oninput="get_invoice(this.value, 'vr_no')"
                         value="{{$vr_no}}"
-                        max="{{$vr_no}}"
                         min="1"
                         class=" border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
                         placeholder="Vr #"
@@ -1591,6 +1590,73 @@
                 </div>
             </div>
         </div>
+
+
+
+
+
+        <div
+            id="bin-model"
+            class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0 model"
+        >
+            <div
+                class="bg-white rounded-lg shadow-lg w-full max-w-[1300px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
+                style="scrollbar-width: none"
+            >
+                <div id="modal-content" class="text-gray-700">
+                    <div class="d-flex">
+                        <h3 class="text-gray-600 text-xl font-medium mb-6">Bin Item</h3>
+                        <div class="popup_close">
+                            <i class="fas fa-close" onclick="closeModal(event, 'bin-model')"></i>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3 flex-wrap sm:flex-nowrap items-end overflow-x-auto pb-3">
+                        <div class="flex-grow flex-shrink-0">
+                            <table class="table-auto w-full border-collapse border text-sm bin-table">
+                                <thead class="bg-gray-50 text-gray-600 font-medium">
+
+                                <tr>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Sr #</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Barcode</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">P Item Code</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Description</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Godown</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Pkt Qty</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Pcs in Pkt</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Total Pcs</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">P Rate</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Amount</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Less / pcs</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Dis / pcs</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">L Rate</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">G Amount</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Margin</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Total Margin</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Total Less</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Total Dis %</th>
+                                    <th class="border border-gray-200 px-4 py-2 text-left">Action</th>
+                                </tr>
+
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3 justify-end text-sm mt-14">
+                    <button
+                        class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
+                        onclick="closeModal(event, 'bin-model')"
+                    >
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
     </form>
   </div>
 </div>
@@ -1872,68 +1938,7 @@
     </div>
 </div>
 
-<div
-    id="bin-model"
-    class="group hidden z-10 px-4 fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity ease-linear duration-200 opacity-0 model"
->
-    <div
-        class="bg-white rounded-lg shadow-lg w-full max-w-[1300px] p-4 sm:p-6 overflow-auto max-h-[95vh] text-[13px] md:text-base transition-transform duration-300 ease-out -translate-y-14 group-[.opacity-100]:transform-none"
-        style="scrollbar-width: none"
-    >
-        <div id="modal-content" class="text-gray-700">
-            <div class="d-flex">
-                <h3 class="text-gray-600 text-xl font-medium mb-6">Bin Item</h3>
-                <div class="popup_close">
-                    <i class="fas fa-close" onclick="closeModal(event, 'bin-model')"></i>
-                </div>
-            </div>
 
-            <div class="flex gap-3 flex-wrap sm:flex-nowrap items-end overflow-x-auto pb-3">
-                <div class="flex-grow flex-shrink-0">
-                    <table class="table-auto w-full border-collapse border text-sm bin-table">
-                        <thead class="bg-gray-50 text-gray-600 font-medium">
-
-                        <tr>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Sr #</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Barcode</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">P Item Code</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Description</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Godown</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Pkt Qty</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Pcs in Pkt</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Total Pcs</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">P Rate</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Amount</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Less / pcs</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Dis / pcs</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">L Rate</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">G Amount</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Margin</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Total Margin</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Total Less</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Total Dis %</th>
-                            <th class="border border-gray-200 px-4 py-2 text-left">Action</th>
-                        </tr>
-
-                        </thead>
-                        <tbody>
-
-                        </tbody>
-
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="flex items-center gap-3 justify-end text-sm mt-14">
-            <button
-                class="px-5 py-2 transition-colors duration-200 bg-red-600 border border-red-600 text-white rounded-lg hover:bg-transparent hover:text-red-600"
-                onclick="closeModal(event, 'bin-model')"
-            >
-                Close
-            </button>
-        </div>
-    </div>
-</div>
 
 
 
@@ -2942,7 +2947,7 @@
                 },
                     success: function(response) {
                     //window.alert(response);
-                        console.log(response);
+                       // console.log(response);
                         if (response) {
                             var data = (response);
                             if (response.comments.length > 0) {
@@ -3044,7 +3049,7 @@
                             var no =1;
                             for (var i = 0; i < items.length; i++) {
                                 var row = items[i];
-
+                                //console.log(row);
                                 if(row.party_discount === null){
                                     var dis = 0;
                                 }else{
@@ -3108,15 +3113,19 @@
                                 }
                                 var row_id = row.id;
                                 //window.alert(row.status);
-                                if(row.status == 0 || row.status == 3 || row.status == null){
-                                    if(row.status == 3){
+                                if(row.status == 0 || row.status == 3 || row.status == 4 || row.status == null){
+                                    if(row.status == 4){
                                         var sty = "style='background-color: #DFE2ED;'";
+                                    }else if(row.status == 3){
+                                        var sty = "style='background-color: #EDDFD3;'";
                                     }else{
                                         var sty = "style='background-color: #FFFFFF;'";
                                     }
                                     //window.alert('in row');
                                     var newRow =
                                         "<tr "+sty+">" +
+                                        "<input type='hidden' name='invoice_list_id[]' id='iiiitableLess-"+table_id+"' value='" + (row.id ?? '') + "' />" +
+                                        "<input type='hidden' name='item_invoice_id[]' id='iiitableLess-"+table_id+"' value='" + (row.item_invoice_id ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_less_total[]' id='iitableLess-"+table_id+"' value='" + (row.party_less_total ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_total_discount[]' value='" + (row.party_total_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_discount[]' value='" + (row.party_discount ?? '') + "' />" +
@@ -3164,13 +3173,15 @@
                                     $(".main-table tbody").append(newRow);
                                 }else{
                                     var bin_array = "<tr style='font-size: 15px; text-align: center;'>" +
-                                        "<input type='hidden' name='invoice_party_less_total[]' value='" + (row.party_less_total ?? '') + "' />" +
+                                        "<input type='hidden' name='invoice_list_id[]' id='iiiitableLess-"+table_id+"' value='" + (row.id ?? '') + "' />" +
+                                        "<input type='hidden' name='item_invoice_id[]' id='iiitableLess-"+table_id+"' value='" + (row.item_invoice_id ?? '') + "' />" +
+                                        "<input type='hidden' name='invoice_party_less_total[]' id='iitableLess-"+table_id+"' value='" + (row.party_less_total ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_total_discount[]' value='" + (row.party_total_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_discount[]' value='" + (row.party_discount ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_margin_field[]' value='" + (row.margin_field ?? '') + "' />" +
-                                        "<input type='hidden' name='item_id[]' value='" + (row.id ?? '') + "' class='item-id' />" +
-                                        "<input type='hidden' name='invoice_party_less_per_pcs[]' value='" + (row.less_per_pcs ?? '') + "' class='party_less_post' />" +
-                                        "<input type='hidden' name='invoice_packet_qty[]' value='" + (row.packet_qty ?? '') + "' class='item-qty' />" +
+                                        "<input type='hidden' name='item_id[]' value='" + (row.barcode ?? '') + "' class='item-id' />" +
+                                        "<input type='hidden' name='invoice_party_less_per_pcs[]' id='itableLess-"+table_id+"' value='" + (row.less_per_pcs ?? '') + "' class='party_less_post' />" +
+                                        "<input type='hidden' name='invoice_packet_qty[]' id='itableQty-"+table_id+"' value='" + (row.packet_qty ?? '') + "' class='item-qty' />" +
                                         "<input type='hidden' name='invoice_barcode[]' value='" + (row.barcode ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_party_item_code[]' value='" + (row.party_item_code ?? '') + "' />" +
                                         "<input type='hidden' name='invoice_description[]' value='" + (row.description ?? '') + "' />" +
@@ -3671,6 +3682,9 @@
             valuee = t_am/t_amount * 100;
 
             $("#total_less2").val(valuee.toFixed(3) + "% | " + t_am);
+            if(isNaN(total_margin)){
+                total_margin = 0;
+            }
             var grand_amount = t_am - freight + total_margin;
             var t_profit = grand_amount/t_amount * 100;
             $("#total_profit2").val(t_profit.toFixed(3) + "% | " + grand_amount);

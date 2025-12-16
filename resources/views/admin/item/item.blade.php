@@ -1073,367 +1073,472 @@ tbody{
         </div>
 
         <div class="flex gap-5 flex-wrap sm:flex-nowrap pt-5">
-
-          <div class="flex items-center flex-col gap-3 flex-grow md:flex-1 md:max-w-72">
-            <label
-              for="file"
-              class="flex items-center justify-center gap-2 flex-col w-full cursor-pointer transition-colors hover:bg-red-50 h-32 p-2 border-2 border-dashed border-red-300 rounded-xl"
-            >
-              <input
-                id="file"
-                type="file"
-                class="hidden"
-                onchange="uploadFile(event,'file-preview')"
-              />
-              <i class="fa-regular fa-file text-5xl text-red-400"></i>
-              <img
-                id="file-preview"
-                class="block hidden w-full h-full object-cover rounded-md"
-                alt=""
-              />
-              <span
-                class="block text-xs font-medium text-red-400 underline"
-                >Upload File</span
-              >
-            </label>
-            <button
-              class="flex items-center justify-center gap-2 flex-col w-full cursor-pointer transition-colors hover:bg-red-50 h-32 p-2 border-2 border-dashed border-red-300 rounded-xl"
-              type="button"
-              onclick="opneCam(event, 'file-preview')"
-            >
-              <i class="fa-solid fa-camera text-4xl text-red-400"></i>
-              <span
-                class="block text-xs font-medium text-red-400 underline"
-                >Open Camera</span
-              >
-            </button>
-          </div>
-          <div class="flex-grow md:flex-1 space-y-2.5 ml-4 ">
-            <div class="flex items-center flex-wrap sm:flex-nowrap gap-3 justify-end">
-              <div class="flex flex-col gap-1 w-full max-w-[80px]">
-                <label for="total_pkt" class="text-gray-600 font-medium"
-                  >Pkt Qty</label
-                >
-                <input
-                  id="total_pkt"
-                  name="total_pkt"
-                  type="text"
-                  placeholder="Qty"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="total-p" class="text-gray-600 font-medium"
-                  >Total Pcs</label
-                >
-                <input
-                  id="total_piec"
-                  name="total_piec"
-                  type="text"
-                  placeholder="Total Pcs"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="amount" class="text-gray-600 font-medium"
-                  >Amount</label
-                >
-                <input
-                  id="total_amount"
-                  name="total_amount"
-                  type="text"
-                  placeholder="Amount"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="total_less" class="text-gray-600 font-medium"
-                  >Less</label
-                >
-                <input
-                  id="total_less"
-                  name="total_less"
-                  type="text"
-                  placeholder="Less"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="total_gamount" class="text-gray-600 font-medium"
-                  >G Amount</label
-                >
-                <input
-                  id="total_gamount"
-                  name="total_gamount"
-                  type="text"
-                  placeholder="G amount"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-            </div>
-            <div class="flex items-center flex-wrap sm:flex-nowrap gap-3  justify-end">
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="inv_disc_perc" class="text-gray-600 font-medium"
-                  >Inv Disc
-                </label>
-                <input
-                  id="inv_disc_perc"
-                  name="inv_disc_perc"
-                  type="text"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
-                  oninput="calcTable()"
-
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="total_disc" class="text-gray-600 font-medium"
-                  >Disc</label
-                >
-                <input
-                  id="total_disc"
-                  name="total_disc"
-                  type="text"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label
-                  for="net_amount"
-                  class="text-gray-600 font-medium"
-                  >Net Amount</label
-                >
-                <input
-                  id="net_amount"
-                  name="net_amount"
-                  type="text"
-                  placeholder="Net Amount"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-            </div>
-            <div class="flex items-center justify-end flex-wrap sm:flex-nowrap gap-3">
-                {{--<div class="flex items-center flex-col gap-3 flex-grow md:flex-1 md:max-w-72">
-                    hello<br>check<br>hello<br>check<br>hello<br>check<br>
-                </div>--}}
-                <div style="position:absolute; width: 300px; height: 200px; margin-right: 600px; margin-top: 100px;">
-                    <div class="flex items-center justify-end gap-4 sm:mt-[26px]">
-                        <div class="flex items-center gap-2">
-                            <label for="cash" class="text-gray-600 text-xl"
-                            >Cash</label
-                            >
-                            <input
-                                type="radio"
-                                name="payment_status"
-                                id="cash"
-                                value="Cash"
-                                class="accent-indigo-600 w-3 h-3"
-                            />
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <label for="credit" class="text-gray-600 text-xl"
-                            >Credit</label
-                            >
-                            <input
-                                type="radio"
-                                name="payment_status"
-                                id="credit"
-                                value="Credit"
-                                class="accent-indigo-600 w-3 h-3"
-                                checked
-                            />
-                        </div>
-                    </div>
-                    {{--2nd--}}
-                    <div class="flex items-center justify-end gap-4 sm:mt-[26px]">
-                        <div class="flex items-center gap-2">
-                            <label for="bulk_print" class="text-gray-600 text-xl"
-                            >Print</label
-                            >
-                            <input
-                                type="radio"
-                                name="bulk_status"
-                                id="bulk_print"
-                                value="bulk_print"
-                                class="accent-indigo-600 w-3 h-3"
-                                checked
-                            />
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <label for="bulk_preview" class="text-gray-600 text-xl"
-                            >Preview</label
-                            >
-                            <input
-                                type="radio"
-                                name="bulk_status"
-                                id="bulk_preview"
-                                value="bulk_preview"
-                                class="accent-indigo-600 w-3 h-3"
-
-                            />
-                        </div>
-                    </div>
-                    {{--3rd--}}
-                    <div class="flex items-center justify-end gap-4 sm:mt-[26px]">
-                        <div class="flex items-center gap-2">
-                            <label for="bulk_single" class="text-gray-600 text-xl"
-                            >Single</label
-                            >
-                            <input
-                                type="radio"
-                                name="bulk_type"
-                                id="bulk_single"
-                                value="bulk_single"
-                                class="accent-indigo-600 w-3 h-3"
-                            />
-                        </div>
-                        <div class="flex items-center gap-2">
-                            <label for="bulk_double" class="text-gray-600 text-xl"
-                            >Double</label
-                            >
-                            <input
-                                type="radio"
-                                name="bulk_type"
-                                id="bulk_double"
-                                value="bulk_double"
-                                class="accent-indigo-600 w-3 h-3"
-                                checked
-                            />
-                        </div>
-                    </div>
-                </div>
-                {{--<div class="bg-gray-100 p-6 rounded-lg shadow-md grid grid-cols-3 gap-4">
-                    <div class="bg-blue-500 text-white p-4 rounded">Column 1</div>
-                    <div class="bg-green-500 text-white p-4 rounded">Column 2</div>
-                    <div class="bg-red-500 text-white p-4 rounded">Column 3</div>
-                </div>--}}
-
-
-
-
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="freight" class="text-gray-600 font-medium"
-                  >Margin</label
-                >
-                <input
-                  oninput="calcTable()"
-                  id="total_margin"
-                  name="total_margin"
-                  type="number"
-                  placeholder="Margin"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-                <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="freight" class="text-gray-600 font-medium"
-                  >Freight</label
-                >
-                <input
-                  oninput="calcTable()"
-                  id="freight"
-                  name="freight"
-                  type="number"
-                  placeholder="Freight"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
-
-                />
-              </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label
-                  for="paid_amount"
-                  class="text-gray-600 font-medium"
-                  >Paid Amount</label
-                >
-                <input
-                  oninput="calcTable()"
-                  id="paid_amount"
-                  name="paid_amount"
-                  type="text"
-                  placeholder="Paid Amount"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
-
-                />
-              </div>
-            </div>
-            <div class="flex items-center justify-end flex-wrap sm:flex-nowrap gap-3">
-
             <div>
-
-
-
-             </div>
-
-
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label for="total_less2" class="text-gray-600 font-medium"
-                  >Total Less</label
-                >
-                <input
-                  id="total_less2"
-                  name="total_less2"
-                  type="text"
-                  placeholder="Total Less"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
-              </div>
-                <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                <div class="flex items-center gap-3 flex-wrap w-50">
 
                     <label
-                        for="total_profit2"
-                        class="text-gray-600 font-medium"
-                    >Total Profit</label
+                        for="uploadImg"
+                        class="flex items-center justify-center gap-2 flex-col cursor-pointer transition-colors hover:bg-indigo-50 w-20 h-20 p-2 border-2 border-dashed border-indigo-300 rounded-xl"
                     >
-                    <input
-                        id="total_profit2"
-                        name="total_profit2"
-                        type="text"
-                        placeholder="Total Profit"
-                        class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                        required
-                        readonly
-                    />
+                        <input
+                            id="uploadImg"
+                            name="image"
+                            type="file"
+                            accept="image/*"
+                            oninput="uploadFile(event, 'previewImg', 'img')"
+                            class="hidden"
+                        />
+                        <i class="fa-regular fa-image text-1xl text-indigo-400"></i>
+                        <img
+                            id="previewImg"
+                            class="block hidden w-full h-full object-cover rounded-md"
+                            alt=""
+                        />
+                        <span class="text-xs font-medium text-indigo-400 "
+                        >Upload Image</span
+                        >
+                    </label>
+
+                    <button
+                        class="flex items-center justify-center gap-2 flex-col cursor-pointer transition-colors hover:bg-indigo-50 w-20 h-20 p-2 border-2 border-dashed border-indigo-300 rounded-xl"
+                        type="button"
+                        onclick="opneCam(event, 'previewImg')"
+                    >
+                        <i class="fa-solid fa-camera text-1xl text-indigo-400"></i>
+                        <span
+                            class="block text-xs font-medium text-indigo-400 "
+                        >Open Camera</span
+                        >
+                    </button>
+
+                    <button
+                        class="flex items-center justify-center gap-2 flex-col w-20 cursor-pointer transition-colors hover:bg-indigo-50 h-20 p-2 border-2 border-dashed border-indigo-300 rounded-xl relative"
+                        type="button"
+                        onclick="openModal(event, 'bin-model')"
+                        style="width: 70px;"
+                    >
+                        <i class="fa-solid fa-trash text-1xl text-indigo-400"></i>
+
+                        <span class="block text-xs font-medium text-indigo-400 w-20">
+            Bin
+        </span>
+
+                        <!-- Counter Badge -->
+                        <span class="absolute -top-2 -right-2 bg-indigo-400 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg" style="position: absolute; margin-top: -57px; margin-left: 67px; " id="bin-counter">0</span>
+                    </button>
+
+                    <button
+                        class="flex items-center justify-center gap-2 flex-col w-20 cursor-pointer transition-colors hover:bg-indigo-50 h-20 p-2 border-2 border-dashed border-indigo-300 rounded-xl relative"
+                        type="button"
+                        onclick="openModal(event, 'comment-model')"
+                        id="reasons"
+                        style="width: 70px; text-decoration: none !important;"
+                    >
+                        <i class="fa-solid fa-comment text-1xl text-indigo-400"></i>
+
+                        <span class="block text-xs font-medium text-indigo-400 ">
+            Reasons
+        </span>
+
+                        <!-- Counter Badge -->
+                        <span class="absolute -top-2 -right-2 bg-indigo-400 text-white text-[10px] font-bold w-5 h-5 flex items-center justify-center rounded-full shadow-lg" style="position: absolute; margin-top: -57px; margin-left: 67px; " id="comment-counter">0</span>
+                    </button>
+
+                    {{--<button
+                        class="flex items-center justify-center gap-2 flex-col w-20 cursor-pointer transition-colors hover:bg-red-50 h-20 p-2 border-2 border-dashed border-red-300 rounded-xl"
+                        type="button"
+                        onclick="openModal(event, 'bin-model')"
+                    >
+                        <i class="fa-solid fa-bell  text-1xl text-red-400"></i>
+                        <span class="block text-xs font-medium text-red-400 underline">
+                      Notification
+                    </span>
+                    </button>--}}
                 </div>
-              <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                <label
-                  for="total_amount2"
-                  class="text-gray-600 font-medium"
-                  >Total Amount</label
-                >
-                <input
-                  id="total_amount2"
-                  name="total_amount2"
-                  type="number"
-                  placeholder="Total Amount"
-                  class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                  required
-                  readonly
-                />
 
-              </div>
+                <!-- New row for Bin and Reasons buttons -->
+                <div class="flex items-center gap-3 mt-4 w-96" style="margin-top: 149px;">
+
+                    <button
+                        class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                        type="button"
+                        onclick="openModal(event, 'payment-method-model')"
+                    >
+                        <i data-feather="credit-card" class="w-4 h-4 mr-3"></i>
+                        Payments
+                    </button>
+
+                    <button class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600" type="reset" onclick="location.reload();" id="reset_btn"> <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i> Reset </button>
+
+                    {{--<button
+                      class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                      type="submit"
+                    >
+                      <i data-feather="chevrons-up" class="w-4 h-4 mr-3"></i>
+                      Update
+                    </button>--}}
+                    <button class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600" type="submit" > <i data-feather="save" class="w-4 h-4 mr-3"></i> <span id="invoice_save"> Save</span> </button>
+                    <button
+                        class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                        type="button"
+                    >
+                        <i data-feather="printer" class="w-4 h-4 mr-3"></i>
+                        Print
+                    </button>
+                    <button
+                        id="generate_barcode"
+                        class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                        type="button"
+                    >
+                        <i data-feather="codesandbox" class="w-4 h-4 mr-3"></i>
+                        QR Code
+                    </button>
+
+                    <button
+                        class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
+                        type="button"
+                        onclick="openModalPur(event, 'update-model', 'ud_comment')"
+                    >
+                        <i data-feather="trash-2" class="w-4 h-4 mr-3"></i>
+                        Delete
+                    </button>
+
+                </div>
+
+            </div>
 
 
-          </div>
+
+
+
+
+
+
+
+            <div class="flex-grow md:flex-1 ">
+
+                <div class="flex items-center flex-wrap sm:flex-nowrap gap-3 justify-end">
+                    <div class="flex flex-col gap-1 w-full max-w-[80px]">
+                        <label for="total_pkt" class="text-gray-600 font-medium"
+                        >Pkt Qty</label
+                        >
+                        <input
+                            id="total_pkt"
+                            name="total_pkt"
+                            type="text"
+                            placeholder="Qty"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="total-p" class="text-gray-600 font-medium"
+                        >Total Pcs</label
+                        >
+                        <input
+                            id="total_piec"
+                            name="total_piec"
+                            type="text"
+                            placeholder="Total Pcs"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="amount" class="text-gray-600 font-medium"
+                        >Amount</label
+                        >
+                        <input
+                            id="total_amount"
+                            name="total_amount"
+                            type="text"
+                            placeholder="Amount"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="total_less" class="text-gray-600 font-medium"
+                        >Less</label
+                        >
+                        <input
+                            id="total_less"
+                            name="total_less"
+                            type="text"
+                            placeholder="Less"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="total_gamount" class="text-gray-600 font-medium"
+                        >G Amount</label
+                        >
+                        <input
+                            id="total_gamount"
+                            name="total_gamount"
+                            type="text"
+                            placeholder="G amount"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="flex items-center flex-wrap sm:flex-nowrap gap-3  justify-end">
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="inv_disc_perc" class="text-gray-600 font-medium"
+                        >Inv Disc
+                        </label>
+                        <input
+                            id="inv_disc_perc"
+                            name="inv_disc_perc"
+                            type="text"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
+                            oninput="calcTable()"
+
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="total_disc" class="text-gray-600 font-medium"
+                        >Disc</label
+                        >
+                        <input
+                            id="total_disc"
+                            name="total_disc"
+                            type="text"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label
+                            for="net_amount"
+                            class="text-gray-600 font-medium"
+                        >Net Amount</label
+                        >
+                        <input
+                            id="net_amount"
+                            name="net_amount"
+                            type="text"
+                            placeholder="Net Amount"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                </div>
+                <div class="flex items-center justify-end flex-wrap sm:flex-nowrap gap-3">
+                    {{--<div class="flex items-center flex-col gap-3 flex-grow md:flex-1 md:max-w-72">
+                        hello<br>check<br>hello<br>check<br>hello<br>check<br>
+                    </div>--}}
+                    <div style="position:absolute; width: 300px; height: 130px; margin-right: 600px; margin-top: -20px;">
+                        <div class="flex items-center justify-end gap-4 " style="margin-top: 10px;">
+                            <div class="flex items-center gap-2">
+                                <label for="cash" class="text-gray-600 text-xl"
+                                >Cash</label
+                                >
+                                <input
+                                    type="radio"
+                                    name="payment_status"
+                                    id="cash"
+                                    value="Cash"
+                                    class="accent-indigo-600 w-3 h-3"
+                                />
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="credit" class="text-gray-600 text-xl">Credit</label>
+                                <input
+                                    type="radio"
+                                    name="payment_status"
+                                    id="credit"
+                                    value="Credit"
+                                    class="accent-indigo-600 w-3 h-3"
+                                    checked
+                                />
+                            </div>
+                        </div>
+                        {{--2nd--}}
+                        <div class="flex items-center justify-end gap-4" style="margin-top: 10px;">
+                            <div class="flex items-center gap-2">
+                                <label for="bulk_print" class="text-gray-600 text-xl"
+                                >Print</label
+                                >
+                                <input
+                                    type="radio"
+                                    name="bulk_status"
+                                    id="bulk_print"
+                                    value="bulk_print"
+                                    class="accent-indigo-600 w-3 h-3"
+                                    checked
+                                />
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="bulk_preview" class="text-gray-600 text-xl"
+                                >Preview</label
+                                >
+                                <input
+                                    type="radio"
+                                    name="bulk_status"
+                                    id="bulk_preview"
+                                    value="bulk_preview"
+                                    class="accent-indigo-600 w-3 h-3"
+
+                                />
+                            </div>
+                        </div>
+                        {{--3rd--}}
+                        <div class="flex items-center justify-end gap-4" style="margin-top: 10px;">
+                            <div class="flex items-center gap-2">
+                                <label for="bulk_single" class="text-gray-600 text-xl"
+                                >Single</label
+                                >
+                                <input
+                                    type="radio"
+                                    name="bulk_type"
+                                    id="bulk_single"
+                                    value="bulk_single"
+                                    class="accent-indigo-600 w-3 h-3"
+                                />
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <label for="bulk_double" class="text-gray-600 text-xl"
+                                >Double</label
+                                >
+                                <input
+                                    type="radio"
+                                    name="bulk_type"
+                                    id="bulk_double"
+                                    value="bulk_double"
+                                    class="accent-indigo-600 w-3 h-3"
+                                    checked
+                                />
+                            </div>
+                        </div>
+                    </div>
+                    {{--<div class="bg-gray-100 p-6 rounded-lg shadow-md grid grid-cols-3 gap-4">
+                        <div class="bg-blue-500 text-white p-4 rounded">Column 1</div>
+                        <div class="bg-green-500 text-white p-4 rounded">Column 2</div>
+                        <div class="bg-red-500 text-white p-4 rounded">Column 3</div>
+                    </div>--}}
+
+
+
+
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="freight" class="text-gray-600 font-medium"
+                        >Margin</label
+                        >
+                        <input
+                            oninput="calcTable()"
+                            id="total_margin"
+                            name="total_margin"
+                            type="number"
+                            placeholder="Margin"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="freight" class="text-gray-600 font-medium"
+                        >Freight</label
+                        >
+                        <input
+                            oninput="calcTable()"
+                            id="freight"
+                            name="freight"
+                            type="number"
+                            placeholder="Freight"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
+
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label
+                            for="paid_amount"
+                            class="text-gray-600 font-medium"
+                        >Paid Amount</label
+                        >
+                        <input
+                            oninput="calcTable()"
+                            id="paid_amount"
+                            name="paid_amount"
+                            type="text"
+                            placeholder="Paid Amount"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
+
+                        />
+                    </div>
+                </div>
+                <div class="flex items-center justify-end flex-wrap sm:flex-nowrap gap-3">
+
+                    <div>
+
+
+
+                    </div>
+
+
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label for="total_less2" class="text-gray-600 font-medium"
+                        >Total Less</label
+                        >
+                        <input
+                            id="total_less2"
+                            name="total_less2"
+                            type="text"
+                            placeholder="Total Less"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+
+                        <label
+                            for="total_profit2"
+                            class="text-gray-600 font-medium"
+                        >Total Profit</label
+                        >
+                        <input
+                            id="total_profit2"
+                            name="total_profit2"
+                            type="text"
+                            placeholder="Total Profit"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+                    </div>
+                    <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                        <label
+                            for="total_amount2"
+                            class="text-gray-600 font-medium"
+                        >Total Amount</label
+                        >
+                        <input
+                            id="total_amount2"
+                            name="total_amount2"
+                            type="number"
+                            placeholder="Total Amount"
+                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                            required
+                            readonly
+                        />
+
+                    </div>
+
+
+                </div>
+
+            </div>
         </div>
-
-
-      </div>
     </div>
 
     <div
@@ -1612,39 +1717,7 @@ tbody{
     <div
       class="my-4 flex items-center gap-2 justify-end bg-white p-3 px-4 rounded-lg shadow-sm"
     >
-      <div class="flex items-center flex-wrap sm:flex-nowrap gap-3 justify-end">
-        <button
-          class="flex items-center px-4 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-          type="button"
-          onclick="location.reload();"
-        >
-          <i data-feather="refresh-ccw" class="w-4 h-4 mr-3"></i>
-          Refresh
-        </button>
-        <button
-          class="flex items-center px-4 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-          type="button"
-          onclick="openModal(event, 'payment-method-model')"
-        >
-          <i data-feather="credit-card" class="w-4 h-4 mr-3"></i>
-          Payment Method
-        </button>
-        <button
-          class="flex items-center px-4 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-          type="submit"
-        >
-          <i data-feather="save" class="w-4 h-4 mr-3"></i>
-          <span id="invoice_save">Inv Save</span>
-        </button>
-        <button
-        id="generate_barcode"
-          class="flex items-center px-4 py-2 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-          type="button"
-        >
-          <i data-feather="codesandbox" class="w-4 h-4 mr-3"></i>
-          BarCode
-        </button>
-      </div>
+
     </div>
 
   </form>
@@ -2193,7 +2266,7 @@ jQuery(document).ready(function() {
 });
 </script>
 
-<script>
+{{--<script>
 jQuery(document).ready(function () {
 
     function getItemDetails(itemId) {
@@ -2523,6 +2596,357 @@ jQuery(document).ready(function () {
           }, 500);
 
   });
+</script>--}}
+
+<script>
+
+    jQuery(document).ready(function () {
+
+        function getItemDetails(itemId) {
+            return new Promise(function (resolve, reject) {
+                jQuery.ajax({
+                    url: "{{ route('get.item.details.pur') }}",
+                    method: "GET",
+                    data: { id: itemId },
+                    success: function (response) {
+                        resolve(response);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error fetching item:', error);
+                        reject(error);
+                    }
+                });
+            });
+        }
+
+        function generateBarcodeHTML2(item, size, index) {
+            let html = '';
+            switch (size) {
+                case "size_1":
+                    html += `
+                <div class="barcode-image-section size_1 bq-inner-box">
+                    <div class="barcode-item-wrapper">
+                        <p class="barcode-item-description">
+                            <span class="barcode_name">${item.name}</span> (${item.size})
+                        </p>
+                        <span class="barcode-image-main barcode-image-size">
+
+                             <img src="{{ asset('assets/img/barcode_1.png') }}" class="barcode-img">
+                            <span class="barcode-image-desc-left">
+                                <h3 id="barcode_ptc">${item.code}</h3>
+                            </span>
+                            <span class="barcode-image-desc-right">
+                                <h3>NNG <span>${item.sale_rate}</span></h3>
+                            </span>
+                            <span class="barcode-image-desc-bottom">
+                                <h3>${item.barcode}</h3>
+                            </span>
+                        </span>
+                    </div>
+                </div>`;
+                    break;
+                case "size_2":
+                    /*<img src="" class="qr-img">*/
+
+                    html += `
+                <div class="qr-image-section size_2 bq-inner-box">
+                    <div class="qr-item">
+                        <p class="qr-description">
+                            <span>${item.item_name}</span> (${item.size})
+                        </p>
+                        <h3 class="qr-code-text" id="barcode_ptc">${item.barcode}</h3>
+                        <h3 class="qr-price">
+                            <strong>NNG <span>${item.sale_rate}</span></strong>
+                        </h3>
+                        <img src="{{ asset('assets/img/qrcode_1.png') }}" class="qr-img">
+                        <h3 class="qr-barcode">${item.barcode}</h3>
+                    </div>
+                </div>`;
+                    break;
+                case "size_3":
+                    html += `
+               <div class="barcode-image-section size_3 bq-inner-box">
+<div class="barcode-item">
+  <p class="barcode-description">
+    <span id="barcode_item">${item.name}</span>
+    (<span id="barcode_size">${item.size}</span>)
+  </p>
+
+  <span class="barcode-image-main">
+    <img src="{{ asset('assets/img/barcode_2.png') }}" alt="barcode" class="barcode-img">
+
+    <span class="barcode-image-desc-left">
+      <h3 id="barcode_ptc">${item.code}</h3>
+    </span>
+
+    <span class="barcode-image-desc-right">
+      <h3 id="barcode_price">NNG <span id="barcode_sale_rate">${item.sale_rate}</span></h3>
+    </span>
+
+    <span class="barcode-image-desc-bottom">
+      <h3 id="barcode_barcode">${item.barcode}</h3>
+    </span>
+  </span>
+</div>
+</div>`;
+                    break;
+                case "size_4":
+                    let qrId = "qr_" + item.barcode;
+                    let str = item.item_name;
+                    let parts = str.split("-");
+                    let name = parts[1] + "-" + parts[2];
+                    //console.log(name);
+                    html += `
+               <div class="qr-image-section size_4 bq-inner-box">
+<div class="qr-item">
+  <p class="qr-title">
+    <span id="barcode_item">${name}</span>
+    (<span id="barocde_size">${item.size}</span>)
+  </p>
+
+  <h3 class="qr-code" id="barcode_ptc">${item.code}</h3>
+
+
+
+
+
+<h3 class="qr-price">
+    <strong>NNG <br><span id="barcode_sale_rate">${item.sale_rate}</span></strong>
+  </h3>
+
+<span id="${qrId}" class="qr-img" ></span>
+
+  <h3 class="qr-barcode" id="barcode_barcode">${item.barcode}</h3>
+
+
+</div>
+</div>`;
+
+                    break;
+            }
+
+            return html;
+        }
+
+
+        function generateBarcodeHTML(item, size) {
+            let html = '';
+            switch (size) {
+                case "size_1":
+                    html = `
+                <div class="barcode-image-section size_1 bq-inner-box">
+                    <div class="barcode-item-wrapper">
+                        <p class="barcode-item-description">
+                            <span class="barcode_name">${item.name}</span> (${item.size})
+                        </p>
+                        <span class="barcode-image-main barcode-image-size">
+                            <img src="{{ asset('assets/img/barcode_1.png') }}" class="barcode-img">
+                            <span class="barcode-image-desc-left">
+                                <h3 id="barcode_ptc">${item.code}</h3>
+                            </span>
+                            <span class="barcode-image-desc-right">
+                                <h3>NNG <span>${item.sale_rate}</span></h3>
+                            </span>
+                            <span class="barcode-image-desc-bottom">
+                                <h3>${item.barcode}</h3>
+                            </span>
+                        </span>
+                    </div>
+                </div>`;
+                    break;
+                case "size_2":
+                    html = `
+                <div class="qr-image-section size_2 bq-inner-box">
+                    <div class="qr-item">
+                        <p class="qr-description">
+                            <span>${item.name}</span> (${item.size})
+                        </p>
+                        <h3 class="qr-code-text" id="barcode_ptc">${item.code}</h3>
+                        <h3 class="qr-price">
+                            <strong>NNG <span>${item.sale_rate}</span></strong>
+                        </h3>
+                        <img src="{{ asset('assets/img/qrcode_1.png') }}" class="qr-img">
+                        <h3 class="qr-barcode">${item.barcode}</h3>
+                    </div>
+                </div>`;
+                case "size_3":
+                    html = `
+               <div class="barcode-image-section size_3 bq-inner-box">
+<div class="barcode-item">
+  <p class="barcode-description">
+    <span id="barcode_item">${item.name}</span>
+    (<span id="barcode_size">${item.size}</span>)
+  </p>
+
+  <span class="barcode-image-main">
+    <img src="{{ asset('assets/img/barcode_2.png') }}" alt="barcode" class="barcode-img">
+
+    <span class="barcode-image-desc-left">
+      <h3 id="barcode_ptc">${item.code}</h3>
+    </span>
+
+    <span class="barcode-image-desc-right">
+      <h3 id="barcode_price">NNG <span id="barcode_sale_rate">${item.sale_rate}</span></h3>
+    </span>
+
+    <span class="barcode-image-desc-bottom">
+      <h3 id="barcode_barcode">${item.barcode}</h3>
+    </span>
+  </span>
+</div>
+</div>`;
+                case "size_4":
+                    html = `
+               <div class="qr-image-section size_4 bq-inner-box">
+<div class="qr-item">
+  <p class="qr-title">
+    <span id="barcode_item">${item.name}</span>
+    (<span id="barocde_size">${item.size}</span>)
+  </p>
+
+  <h3 class="qr-code" id="barcode_ptc">${item.code}</h3>
+
+  <h3 class="qr-price">
+    <strong>NNG <br><span id="barcode_sale_rate">${item.sale_rate}</span></strong>
+  </h3>
+
+  <img src="{{ asset('assets/img/qrcode_2.png') }}" alt="qr" class="qr-image">
+
+  <h3 class="qr-barcode" id="barcode_barcode">${item.barcode}</h3>
+</div>
+</div>`;
+
+
+                    break;
+                // Add size_3 and size_4 if needed
+            }
+
+            return html;
+        }
+
+        async function renderBarcodes(itemIds, itemQtys) {
+            let size = "{{ $setting->barcode }}";
+            jQuery('#barcode_wrapper').html(''); // Clear
+            showLoader(); // ⬅️ Show global loader
+            var bulk_type = jQuery('input[name="bulk_type"]:checked').val();
+
+            for (let index = 0; index < itemIds.length; index++) {
+                let itemId = itemIds[index];
+                let qty = parseInt(itemQtys[index]);
+
+                let item = await getItemDetails(itemId); // Waits for item details in order
+
+
+                if(bulk_type == "bulk_double"){
+
+                    for (let i = 0; i < qty; i += 2) {
+                        let html = `<div style="margin-left: 0.1cm; margin-top: 0.01cm; display: flex; gap: 0.3cm;">`;
+
+                        html += generateBarcodeHTML2(item, size, i);
+
+                        // Duplicate the item logic if the second exists
+                        if (i + 1 < qty) {
+                            html += generateBarcodeHTML2(item, size, i + 1);
+                        }
+
+                        html += `</div>`;
+
+                        jQuery('#barcode_wrapper').append(html);
+
+
+                    }
+
+                }else{
+
+                    for (let i = 0; i < qty; i++) {
+
+
+                        let html = generateBarcodeHTML2(item, size,i);
+                        jQuery('#barcode_wrapper').append(html);
+                    }
+                }
+
+            }
+
+            hideLoader(); // ⬅️ Hide loader after all done
+
+            if(jQuery('input[name="bulk_status"]:checked').val() == "bulk_print"){
+                $("#print_bulk_barcode").click();
+            }else{
+                openModal(event, 'barcode-bulk-model');
+            }
+
+        }
+
+
+        // Example trigger
+        jQuery('#generate_barcode').on('click', function () {
+            let itemIds = [];
+            let itemQtys = [];
+
+            jQuery('.item-id').each(function () {
+                itemIds.push(jQuery(this).val());
+            });
+
+            jQuery('.item-qty').each(function () {
+                itemQtys.push(jQuery(this).val());
+            });
+
+            console.log("---");
+            console.log(itemIds);
+            console.log(itemQtys);
+
+            renderBarcodes(itemIds, itemQtys);
+        });
+    });
+
+
+
+    jQuery('#print_bulk_barcode').on('click', function () {
+
+        var option = 'double'
+        var $content = jQuery('#barcode_wrapper');
+
+        if (!option || $content.length === 0) {
+            alert("Please make sure a barcode option is selected and content exists.");
+            return;
+        }
+        var printWindow = window.open('', '_blank');
+        printWindow.document.write('<html><head><title>Print Barcode</title>');
+
+        printWindow.document.write('<link rel="stylesheet" href="{{ asset('assets/css/barcode.css?v=4') }}" type="text/css">');
+        printWindow.document.write('<style>body{margin:0px, 0px, 0px, 8px;padding:0;font-family:sans-serif;}.qr-item{ margin-left: 0px !important; }.qr-title { margin-top: 0px;}blockquote, dl, dd, h1, h2, h3, h4, h5, h6, hr, figure, p, pre { margin: 0;}.qr-img {position: absolute;margin-top: -47px;margin-left: 55px;}.size_4 .qr-barcode{position: absolute !important;left: 70% !important;bottom: 35px !important;font-weight: bolder !important;font-size: 13px !important;margin-bottom: 0 !important;writing-mode: vertical-lr !important;transform: rotate(180deg) !important;} </style>');
+
+        printWindow.document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"><\/script>');
+
+        printWindow.document.write('</head><body>');
+
+        if (option === 'single') {
+            printWindow.document.write($content.prop('outerHTML'));
+        } else if (option === 'double') {
+            var html = $content.prop('outerHTML');
+            printWindow.document.write(html);
+        }
+        printWindow.document.write(`
+                <script>
+                     window.onload = function() {
+                        document.querySelectorAll(".qr-img").forEach(function(div) {
+                        let text = div.closest(".qr-item").querySelector(".qr-barcode").innerText;
+                        new QRCode(div, { text: text, width: 40, height: 40 });
+                        });
+                    };
+                <\/script>
+            `);
+        printWindow.document.write('</body></html>');
+        printWindow.document.close();
+        printWindow.focus();
+
+        setTimeout(function() {
+            printWindow.print();
+        }, 500);
+
+    });
+
 </script>
 
 

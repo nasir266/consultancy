@@ -81,6 +81,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('addSaleman',[salesmanController::class, 'create'])->name("salesman.create");
     Route::post('ajax/salesman/id', [salesmanController::class, 'search_salesman_id'])->name("ajax.salesman.search.id");
 
+
     Route::get('retail-sale-rate', [SettingController::class, 'retail_sale_rate'])->name("retail-sale-rate");
     Route::post('retail-sale-rate/update', [SettingController::class, 'update_retail_sale_rate'])->name("retail-sale-rate.update");
     Route::get('barcode-setting', [SettingController::class, 'barcode'])->name("barcode-setting");
@@ -88,6 +89,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get("bank",[bankController::class, 'index'])->name("bank");
     Route::post('addBank',[bankController::class, 'create'])->name("bank.create");
+    Route::post('ajax/bank/id', [bankController::class, 'search_bank_id'])->name("ajax.bank.search.id");
+
 
     Route::get("goddown",[GodownController::class, 'index'])->name("goddown");
     Route::post('addGoddown/', [GodownController::class, 'addGoddown'])->name('addGoddown');
@@ -111,7 +114,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get("purchase-return-invoice",[purchaseReturnController::class,'index'])->name("purchase-return-invoice");
 
     //Route::view("sale-invoice","admin.sale-invoice.sale-invoice")->name("sale-invoice");
+    //Route::get("sale-invoice",[saleController::class,'index'])->name("sale-invoice");
+
     Route::get("sale-invoice",[saleController::class,'index'])->name("sale-invoice");
+    Route::post("sale_invoice/add",[saleController::class,"add"])->name("sale.invoice.post");
+    Route::post('sale/party/id', [saleController::class, 'search_party_id'])->name("sale.party.search.id");
+    Route::post('ajax/sale_invoice/pur', [saleController::class, 'search_invoice'])->name("ajax.sale_invoice.search");
 
     //Route::get("sale-invoice",[indexConroller::class,"index"])->name("sale-invoice");
     //Route::view("purchase-invoice","admin.purchase-invoice.purchase-invoice")->name("purchase-invoice");

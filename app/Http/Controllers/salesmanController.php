@@ -11,7 +11,8 @@ class salesmanController extends Controller
     public function index()
     {
         $id = salesman::latest('id')->value('id');
-        return view('admin.sales-man.sales-man')->with('id', $id);
+        $salesmans = salesman::all();
+        return view('admin.sales-man.sales-man')->with(['id' => $id, 'salesmans' => $salesmans]);
     }
     public function create(Request $request){
 

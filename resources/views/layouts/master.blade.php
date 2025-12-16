@@ -253,7 +253,7 @@
                   class="flex items-center justify-between gap-2 pr-2 hover:text-indigo-600"
                 >
                   <a href="{{ route('sales-man') }}/" class="flex-1 block"
-                    >Add New Sales Man</a
+                    >Add New Salesman</a
                   >
                   <button data-label="Add New Sales Man" type="button">
                     <i class="fa-solid fa-star text-gray-300 text-xs"></i>

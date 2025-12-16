@@ -147,6 +147,9 @@ class purchaseController extends Controller
             ItemInvoiceList::where('item_invoice_id', $itemInvoiceId)
                 ->where('status', 1)
                 ->update(['status' => 0]);
+            ItemInvoiceList::where('item_invoice_id', $itemInvoiceId)
+                ->where('status', 3)
+                ->update(['status' => 2]);
             return response()->json(['success'=> true]);
         }else{
             return response()->json(['success'=> false]);
@@ -155,9 +158,7 @@ class purchaseController extends Controller
     }
 
     function add(Request $request){
-        //print_r($request->all());
-
-
+            //return print_r($request->all());
         try{
             $data = [
                 'sal_id' => $request->salesman_id,
@@ -212,18 +213,40 @@ class purchaseController extends Controller
 
 
 
+            $existingRows = ItemInvoiceList::where('item_invoice_id', $record->id)
+                ->get()
+                ->keyBy('id');
 
-            if ($request->item_id && !empty($request->item_id)) {
+            $requestIds = $request->invoice_list_id ?? [];
+            //return print_r($requestIds);
+            $rowsToDelete = $existingRows->keys()->diff($requestIds);
 
-                // Fetch existing items for this invoice
-                $existingItems = ItemInvoiceList::where('item_invoice_id', $record->id)
-                    ->get()
-                    ->keyBy('item_id'); // key by item_id for easy lookup
+            if ($rowsToDelete->isNotEmpty()) {
+                ItemInvoiceList::whereIn('id', $rowsToDelete)->delete();
+            }
+
 
                 foreach ($request->item_id as $index => $item_id) {
-
-                    // Prepare common data
+                    $rowId = $request->invoice_list_id[$index] ?? null;
+                    //print_r($rowId);
+                    $invoice_status = ItemInvoiceList::where('id', $rowId)
+                        ->latest('id')
+                        ->value('status');
+                    if($invoice_status == 0 OR $invoice_status == null){
+                        $status = 0;
+                    }elseif ($invoice_status == 1) {
+                        $status = 2;
+                    }elseif ($invoice_status == 2) {
+                        $status = 2;
+                    }elseif ($invoice_status == 3){
+                        $status = 4;
+                    }elseif ($invoice_status == 4){
+                        $status = 4;
+                    }else{
+                        $status = 0;
+                    }
                     $itemData = [
+                        'item_id'                => $item_id,
                         'barcode'                => $request->invoice_barcode[$index] ?? null,
                         'party_item_code'        => $request->invoice_party_item_code[$index] ?? null,
                         'description'            => $request->invoice_description[$index] ?? null,
@@ -244,41 +267,23 @@ class purchaseController extends Controller
                         'party_discount'         => $request->invoice_party_discount[$index] ?? null,
                         'margin'                 => $request->invoice_margin[$index] ?? null,
                         'total_margin'           => $request->invoice_total_margin[$index] ?? null,
-                        'status'                 => $request->invoice_status[$index] ?? 0,
+                        'status'                 => $status,
                     ];
 
-                    $currentStatus = $existingItems->has($item_id)
-                        ? $existingItems[$item_id]->status
-                        : 0; // new item
-
-// Determine next status based on action
-                    if (!$existingItems->has($item_id)) {
-                        // New item inserted from form click → status = 1
-                        $newStatus = 1;
+                    if ($rowId && isset($existingRows[$rowId])) {
+                        // ✅ UPDATE COMPLETE ROW
+                        $existingRows[$rowId]->update($itemData);
                     } else {
-                        // Existing item → check current status
-                        $newStatus = match ($currentStatus) {
-                            1 => 2, // update after first click
-                            2 => 3, // recover
-                            3 => 4, // update after recover
-                            4 => 4, // max status
-                            default => 1, // fallback
-                        };
-                    }
-
-// Now use $newStatus in update or create
-                    if ($existingItems->has($item_id)) {
-                        $existingItems[$item_id]->update(array_merge($itemData, ['status' => $newStatus]));
-                    } else {
+                        // ✅ CREATE NEW ROW
                         ItemInvoiceList::create(array_merge($itemData, [
                             'item_invoice_id' => $record->id,
-                            'item_id'         => $item_id,
-                            'status'          => $newStatus
+                            'status' => 0
                         ]));
                     }
 
+
                 }
-            }
+            //}
 
 
             //return print_r($data);
@@ -289,6 +294,10 @@ class purchaseController extends Controller
             return redirect("/employee-types/add");
         }
     }
+
+
+
+
     /*function add(Request $request){
         //print_r($request->all());
 
@@ -344,9 +353,7 @@ class purchaseController extends Controller
                 ['bill_no' => $request->bill_no],
                 $data
             );
-            ItemInvoiceList::where('item_invoice_id', $record->id)
-                ->where('status', 1)
-                ->update(['status' => 2]);
+
 
 
 
@@ -360,51 +367,73 @@ class purchaseController extends Controller
                         ->delete();
                 }
 
-                foreach ($request->item_id as $index => $item_id) {#
-                    if (!in_array($item_id, $existingItemIds)) {
-                        $i = new ItemInvoiceList;
-                        $i->item_invoice_id = $record->id;
-                        $i->item_id = $item_id;
-                        $i->barcode                = $request->invoice_barcode[$index] ?? null;
-                        $i->party_item_code        = $request->invoice_party_item_code[$index] ?? null;
-                        $i->description            = $request->invoice_description[$index] ?? null;
-                        $i->godown                 = $request->invoice_godown[$index] ?? null;
-                        $i->packet_qty             = $request->invoice_packet_qty[$index] ?? null;
-                        $i->pieces_in_packet       = $request->invoice_pieces_in_packet[$index] ?? null;
-                        $i->total_pcs              = $request->invoice_total_pcs[$index] ?? null;
-                        $i->purchase_rate          = $request->invoice_purchase_rate[$index] ?? null;
-                        $i->amount                 = $request->invoice_amount[$index] ?? null;
-                        $i->less_per_pcs           = $request->invoice_less_per_pcs[$index] ?? null;
-                        $i->discount_per_pcs       = $request->invoice_discount_per_pcs[$index] ?? null;
-                        $i->l_rate                 = $request->invoice_l_rate[$index] ?? null;
-                        $i->gross_amount           = $request->invoice_gross_amount[$index] ?? null;
-                        $i->total_less             = $request->invoice_total_less[$index] ?? null;
-                        $i->total_discount_percent = $request->invoice_total_dis_percent[$index] ?? null;
-                        $i->party_less_total       = $request->invoice_party_less_total[$index] ?? null;
-                        $i->party_total_discount   = $request->invoice_party_total_discount[$index] ?? null;
-                        $i->party_discount         = $request->invoice_party_discount[$index] ?? null;
-                        $i->margin                 = $request->invoice_margin[$index] ?? null;
-                        $i->total_margin           = $request->invoice_total_margin[$index] ?? null;
-                        $i->status                 =  null;
+                //return print_r($itemsToDelete);
 
-                        $i->save();
+                /*$invoice_status = ItemInvoiceList::where('item_invoice_id', $record->id)
+                    ->latest('id')
+                    ->value('status');
+                if($invoice_status == 0 OR $invoice_status == null){
+                    $status = 0;
+                }elseif ($invoice_status == 1) {
+                    $status = 2;
+                }elseif ($invoice_status == 2) {
+                    $status = 2;
+                }elseif ($invoice_status == 3){
+                    $status = 4;
+                }else{
+                    $status = 0;
+                }*/
+
+    /*
+                    foreach ($request->item_id as $index => $item_id) {
+                        if (!in_array($item_id, $existingItemIds)) {
+
+
+                            $i = new ItemInvoiceList;
+                            $i->item_invoice_id = $record->id;
+                            $i->item_id = $item_id;
+                            $i->barcode                = $request->invoice_barcode[$index] ?? null;
+                            $i->party_item_code        = $request->invoice_party_item_code[$index] ?? null;
+                            $i->description            = $request->invoice_description[$index] ?? null;
+                            $i->godown                 = $request->invoice_godown[$index] ?? null;
+                            $i->packet_qty             = $request->invoice_packet_qty[$index] ?? null;
+                            $i->pieces_in_packet       = $request->invoice_pieces_in_packet[$index] ?? null;
+                            $i->total_pcs              = $request->invoice_total_pcs[$index] ?? null;
+                            $i->purchase_rate          = $request->invoice_purchase_rate[$index] ?? null;
+                            $i->amount                 = $request->invoice_amount[$index] ?? null;
+                            $i->less_per_pcs           = $request->invoice_less_per_pcs[$index] ?? null;
+                            $i->discount_per_pcs       = $request->invoice_discount_per_pcs[$index] ?? null;
+                            $i->l_rate                 = $request->invoice_l_rate[$index] ?? null;
+                            $i->gross_amount           = $request->invoice_gross_amount[$index] ?? null;
+                            $i->total_less             = $request->invoice_total_less[$index] ?? null;
+                            $i->total_discount_percent = $request->invoice_total_dis_percent[$index] ?? null;
+                            $i->party_less_total       = $request->invoice_party_less_total[$index] ?? null;
+                            $i->party_total_discount   = $request->invoice_party_total_discount[$index] ?? null;
+                            $i->party_discount         = $request->invoice_party_discount[$index] ?? null;
+                            $i->margin                 = $request->invoice_margin[$index] ?? null;
+                            $i->total_margin           = $request->invoice_total_margin[$index] ?? null;
+                            $i->status                 = $status;
+
+                            $i->save();
+
+
+                        }
                     }
+
+                } else {
+
+                    //ItemInvoiceList::where('item_invoice_id', $record->id)->delete();
+
                 }
 
-            } else {
-
-                //ItemInvoiceList::where('item_invoice_id', $record->id)->delete();
-
+                //return print_r($data);
+                //Session::flash("success","Invoice Added Successfuly!");
+                return response()->json(['success' => true], 201);
+            }catch(Exception $e){
+                Session::flash("error",$e->getMessage());
+                return redirect("/employee-types/add");
             }
-
-            //return print_r($data);
-            //Session::flash("success","Invoice Added Successfuly!");
-            return response()->json(['success' => true], 201);
-        }catch(Exception $e){
-            Session::flash("error",$e->getMessage());
-            return redirect("/employee-types/add");
-        }
-    }*/
+        }*/
 
     public function delete_item(Request $request)
     {

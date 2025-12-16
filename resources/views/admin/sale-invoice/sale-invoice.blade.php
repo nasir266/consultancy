@@ -118,6 +118,7 @@
             justify-content: space-between;
         }
 
+
         .popup_close i{
             cursor: pointer;
         }
@@ -278,7 +279,6 @@
                     </div>
 
 
-
                     <div class="flex gap-2.5 items-center" style="margin-top: 22px;">
                         <button
                             type="button"
@@ -428,6 +428,38 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div style="width: 250px">
+                            <label
+                                for="salesman"
+                                class="block text-gray-600 font-medium mb-1"
+                            >Checker</label
+                            >
+                            <select
+                                name="checker"
+                                id="checker"
+                                class="selectize-input-sp"
+                            >
+                                <option value="">Checker</option>
+                                @foreach($salesmans as $salesman)
+                                    <option value="{{ $salesman->id }}">{{ $salesman->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div style="width: 250px">
+                            <label for="city" class="block text-gray-600 font-medium mb-1"
+                            >Written By</label
+                            >
+                            <select
+                                name="written by"
+                                id="written by"
+                                class="selectize-input-sp"
+                            >
+                                <option value="">Written By</option>
+                                @foreach($salesmans as $salesman)
+                                    <option value="{{ $salesman->id }}">{{ $salesman->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         <div style="width: 250px;">
                             <label
                                 for="godown-s"
@@ -487,7 +519,7 @@
                             name="rbarcode"
                             type="number"
                             min="1"
-                            onblur="getItem(this.value)"
+                            oninput="getItem(this.value)"
                             class="no-arrows border w-full border-gray-300 transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-2 py-1 rounded-md"
                             placeholder="Barcode"
                         />
@@ -521,59 +553,32 @@
                         />
                         <input type="hidden" id="margin_hidden" name="margin_hidden">
                     </div>
-                    <div class="w-full max-w-[90px]">
+                    <div class="w-full max-w-[100px]">
                         <label
-                            for="pktQty"
+                            for="pcs"
                             class="block text-gray-600 font-medium mb-1"
-                        >Pkt Qty</label
+                        >Pcs</label
                         >
                         <input
-                            id="pktQty"
-                            name="pktQty"
+                            id="pcs"
+                            name="pcs"
                             type="number"
-                            oninput="calcPiceses()"
+                            min="1"
+                            onkeyup="calcPiceses()"
                             class="no-arrows border w-full border-gray-300 transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-2 py-1 rounded-md"
-                            placeholder="Pkt Qty"
-                        />
-                    </div>
-                    <div class="w-full max-w-[90px]">
-                        <label
-                            for="pcsPkt"
-                            class="block text-gray-600 font-medium mb-1"
-                        >Pcs Pkt</label
-                        >
-                        <input
-                            id="pcsPkt"
-                            name="pcsPkt"
-                            oninput="calcPiceses()"
-                            type="number"
-                            class="no-arrows border w-full border-gray-300 transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-2 py-1 rounded-md"
-                            placeholder="Pcs Pkt"
-                        />
-                    </div>
-                    <div class="w-full max-w-[90px]">
-                        <label for="tPcs" class="block text-gray-600 font-medium mb-1"
-                        >T Pcs</label
-                        >
-                        <input
-                            id="tPcs"
-                            name="tPcs"
-                            type="number"
-                            class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                            placeholder="T Pcs"
-                            readonly
+                            placeholder="Pcs"
                         />
                     </div>
                     <div class="w-full max-w-[90px]">
                         <label for="pRate" class="block text-gray-600 font-medium mb-1"
-                        >P Rate</label
+                        >S Rate</label
                         >
                         <input
-                            id="pRate"
-                            name="pRate"
+                            id="sRate"
+                            name="sRate"
                             type="number"
                             class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-2 py-1 rounded-md dark-f"
-                            placeholder="P Rate"
+                            placeholder="S Rate"
                             readonly
                         />
                     </div>
@@ -649,6 +654,14 @@
                             style="font-size: 14px;"
                         />
                     </div>
+                    <div class="form-check mt-5">
+                        <input class="form-check-input" type="checkbox" name="auto" id="auto">
+                        <label class="form-check-label" for="auto">
+                            Auto
+                        </label>
+                    </div>
+
+
                 </div>
                 {{-- </div>
 
@@ -678,17 +691,13 @@
                                 <th class="border border-gray-200 px-4 py-2 text-left">P Item Code</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Description</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Godown</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Pkt Qty</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Pcs in Pkt</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Total Pcs</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">P Rate</th>
+                                <th class="border border-gray-200 px-4 py-2 text-left">S Rate</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Amount</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Less / pcs</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Dis / pcs</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">L Rate</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">G Amount</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Margin</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Total Margin</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Total Less</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Total Dis %</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Action</th>
@@ -813,13 +822,7 @@
                               Update
                             </button>--}}
                             <button class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600" type="submit" > <i data-feather="save" class="w-4 h-4 mr-3"></i> <span id="invoice_save"> Save</span> </button>
-                            <button
-                                class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
-                                type="button"
-                            >
-                                <i data-feather="printer" class="w-4 h-4 mr-3"></i>
-                                Print
-                            </button>
+
                             <button
                                 class="flex items-center px-3 py-1.5 transition-colors duration-200 bg-indigo-600 border border-indigo-600 text-white rounded-lg hover:bg-transparent hover:text-indigo-600"
                                 type="button"
@@ -852,20 +855,7 @@
                     <div class="flex-grow md:flex-1 ">
 
                         <div class="flex items-center flex-wrap sm:flex-nowrap gap-3 justify-end">
-                            <div class="flex flex-col gap-1 w-full max-w-[80px]">
-                                <label for="total_pkt" class="text-gray-600 font-medium"
-                                >Pkt Qty</label
-                                >
-                                <input
-                                    id="total_pkt"
-                                    name="total_pkt"
-                                    type="text"
-                                    placeholder="Qty"
-                                    class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                                    required
-                                    readonly
-                                />
-                            </div>
+
                             <div class="flex flex-col gap-1 w-full max-w-[187px]">
                                 <label for="total-p" class="text-gray-600 font-medium"
                                 >Total Pcs</label
@@ -999,60 +989,15 @@
                                 </div>
                                 {{--2nd--}}
                                 <div class="flex items-center justify-end gap-4" style="margin-top: 10px;">
-                                    <div class="flex items-center gap-2">
-                                        <label for="bulk_print" class="text-gray-600 text-xl"
-                                        >Print</label
-                                        >
-                                        <input
-                                            type="radio"
-                                            name="bulk_status"
-                                            id="bulk_print"
-                                            value="bulk_print"
-                                            class="accent-indigo-600 w-3 h-3"
-                                            checked
-                                        />
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <label for="bulk_preview" class="text-gray-600 text-xl"
-                                        >Preview</label
-                                        >
-                                        <input
-                                            type="radio"
-                                            name="bulk_status"
-                                            id="bulk_preview"
-                                            value="bulk_preview"
-                                            class="accent-indigo-600 w-3 h-3"
 
-                                        />
+                                    <div class="flex items-center gap-2">
+
                                     </div>
                                 </div>
                                 {{--3rd--}}
                                 <div class="flex items-center justify-end gap-4" style="margin-top: 10px;">
-                                    <div class="flex items-center gap-2">
-                                        <label for="bulk_single" class="text-gray-600 text-xl"
-                                        >Single</label
-                                        >
-                                        <input
-                                            type="radio"
-                                            name="bulk_type"
-                                            id="bulk_single"
-                                            value="bulk_single"
-                                            class="accent-indigo-600 w-3 h-3"
-                                        />
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <label for="bulk_double" class="text-gray-600 text-xl"
-                                        >Double</label
-                                        >
-                                        <input
-                                            type="radio"
-                                            name="bulk_type"
-                                            id="bulk_double"
-                                            value="bulk_double"
-                                            class="accent-indigo-600 w-3 h-3"
-                                            checked
-                                        />
-                                    </div>
+
+
                                 </div>
                             </div>
                             {{--<div class="bg-gray-100 p-6 rounded-lg shadow-md grid grid-cols-3 gap-4">
@@ -1066,45 +1011,45 @@
 
                             <div class="flex flex-col gap-1 w-full max-w-[187px]">
                                 <label for="freight" class="text-gray-600 font-medium"
-                                >Margin</label
+                                >Freight</label
                                 >
                                 <input
                                     oninput="calcTable()"
                                     id="total_margin"
                                     name="total_margin"
                                     type="number"
-                                    placeholder="Margin"
+                                    placeholder="Freight"
                                     class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
                                     required
                                     readonly
                                 />
                             </div>
                             <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                                <label for="freight" class="text-gray-600 font-medium"
-                                >Freight</label
-                                >
-                                <input
-                                    oninput="calcTable()"
-                                    id="freight"
-                                    name="freight"
-                                    type="number"
-                                    placeholder="Freight"
-                                    class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
-
-                                />
-                            </div>
-                            <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                                <label
-                                    for="paid_amount"
-                                    class="text-gray-600 font-medium"
+                                <label for="paid_amount" class="text-gray-600 font-medium"
                                 >Paid Amount</label
                                 >
                                 <input
                                     oninput="calcTable()"
                                     id="paid_amount"
                                     name="paid_amount"
-                                    type="text"
+                                    type="number"
                                     placeholder="Paid Amount"
+                                    class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
+
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                                <label
+                                    for="total_less2"
+                                    class="text-gray-600 font-medium"
+                                >Total Less</label
+                                >
+                                <input
+                                    oninput="calcTable()"
+                                    id="total_less2"
+                                    name="total_less2"
+                                    type="text"
+                                    placeholder="Total Less"
                                     class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md c-field"
 
                                 />
@@ -1120,24 +1065,7 @@
 
 
                             <div class="flex flex-col gap-1 w-full max-w-[187px]">
-                                <label for="total_less2" class="text-gray-600 font-medium"
-                                >Total Less</label
-                                >
-                                <input
-                                    id="total_less2"
-                                    name="total_less2"
-                                    type="text"
-                                    placeholder="Total Less"
-                                    class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
-                                    required
-                                    readonly
-                                />
-                            </div>
-                            <div class="flex flex-col gap-1 w-full max-w-[187px]">
-
-                                <label
-                                    for="total_profit2"
-                                    class="text-gray-600 font-medium"
+                                <label for="total_profit2" class="text-gray-600 font-medium"
                                 >Total Profit</label
                                 >
                                 <input
@@ -1151,6 +1079,7 @@
                                 />
                             </div>
                             <div class="flex flex-col gap-1 w-full max-w-[187px]">
+
                                 <label
                                     for="total_amount2"
                                     class="text-gray-600 font-medium"
@@ -1159,8 +1088,24 @@
                                 <input
                                     id="total_amount2"
                                     name="total_amount2"
-                                    type="number"
+                                    type="text"
                                     placeholder="Total Amount"
+                                    class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                                    required
+                                    readonly
+                                />
+                            </div>
+                            <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                                <label
+                                    for="previous_balance"
+                                    class="text-gray-600 font-medium"
+                                >Previous Balance</label
+                                >
+                                <input
+                                    id="previous_balance"
+                                    name="previous_balance"
+                                    type="number"
+                                    placeholder="Previous Balance"
                                     class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
                                     required
                                     readonly
@@ -1168,7 +1113,23 @@
 
                             </div>
 
+                            <div class="flex flex-col gap-1 w-full max-w-[187px]">
+                                <label
+                                    for="total_balance"
+                                    class="text-gray-600 font-medium"
+                                >Total Balance</label
+                                >
+                                <input
+                                    id="total_balance"
+                                    name="total_balance"
+                                    type="number"
+                                    placeholder="Total Balance"
+                                    class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md dark-f"
+                                    required
+                                    readonly
+                                />
 
+                            </div>
                         </div>
 
                     </div>
@@ -1298,7 +1259,7 @@
                         </div>
                         <div class="flex flex-col gap-1 flex-grow lg:flex-1 w-100">
                             <label for="p-rate-2" class="text-gray-600 font-medium"
-                            >P Rate</label
+                            >S Rate</label
                             >
                             <select
                                 name="search_purchase_rate"
@@ -1484,17 +1445,14 @@
                                 <th class="border border-gray-200 px-4 py-2 text-left">P Item Code</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Description</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Godown</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Pkt Qty</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Pcs in Pkt</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Total Pcs</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">P Rate</th>
+                                <th class="border border-gray-200 px-4 py-2 text-left">S Rate</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Amount</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Less / pcs</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Dis / pcs</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">L Rate</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">G Amount</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Margin</th>
-                                <th class="border border-gray-200 px-4 py-2 text-left">Total Margin</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Total Less</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Total Dis %</th>
                                 <th class="border border-gray-200 px-4 py-2 text-left">Action</th>
@@ -1907,7 +1865,7 @@
                         //document.getElementById('salesman').focus();
                         return;
                     }
-                    if (activeEl.attr('id') === 'pcsPkt') {
+                    if (activeEl.attr('id') === 'pcs') {
                         $("#rbarcode").focus();
                         return;
                     }
@@ -2151,19 +2109,16 @@
             isSyncing = false;
         }
         function calcPiceses(){
-            var pktQty = $('#pktQty').val();
-            var pcsPkt = $('#pcsPkt').val();
-            var pRate = $('#pRate').val();
+            var pcs = $('#pcs').val();
+            var sRate = $('#sRate').val();
+            var lRate = $('#lRate').val();
             var party_less = $('#rLess').val();
             var party_discount = $('#rDics').val();
-            if(isNaN(pktQty)){
-                pktQty = 0;
+            if(isNaN(pcs)){
+                pcs = 0;
             }
-            if(isNaN(pcsPkt)){
-                pcsPkt = 0;
-            }
-            if(isNaN(pRate)){
-                pRate = 0;
+            if(isNaN(sRate)){
+                sRate = 0;
             }
             //window.alert(party_less);
             if(isNaN(party_less)){
@@ -2172,29 +2127,19 @@
             if(isNaN(party_discount)){
                 party_discount = 0;
             }
-
-
-            var total = pktQty * pcsPkt;
-            var amount = pRate * total;
-            //var per = amount/100 * party_discount;
-            var tot = parseFloat(party_less) + parseFloat(party_discount);
-            ///window.alert(tot);
-            var l_rate = pRate - tot;
-            l_rate = parseFloat(l_rate).toFixed(2);
-            if(l_rate > 0){
-                var grand_amount =  parseInt(total) * l_rate;
-            }else{
-                l_rate = parseFloat(pRate).toFixed(2);
-                var grand_amount =  parseInt(amount);
+            if(isNaN(lRate)){
+                lRate = 0;
             }
-            //window.alert(total);
+
+            var amount = sRate * pcs;
+            var grand_amount =  pcs * lRate;
+
             $('#rAmount').val(amount);
-            $('#tPcs').val(total);
-            $('#lRate').val(l_rate);
             $('#gAmount').val(grand_amount);
         }
 
         function getItem(barcode){
+            $('#loader').show();
             $.ajax({
                 url: '{{'getItem/'}}'+barcode,
                 type: 'GET',
@@ -2214,14 +2159,10 @@
                             $('#description').val(data.description);
                             $('#margin_hidden').val(data.margin_field);
 
-                            $('#pRate').val(data.purchase_rate);
-                            var t_pcs = data.total_pieces;
-                            if(isNaN(t_pcs) || t_pcs === ''){
-                                t_pcs = 0;
-                            }
-                            var pur_rate = data.purchase_rate;
-                            if(isNaN(pur_rate)){
-                                pur_rate = 0;
+                            $('#sRate').val(data.sale_rate);
+                            var sale_rate = data.sale_rate;
+                            if(isNaN(sale_rate)){
+                                sale_rate = 0;
                             }
                             var party_less = data.party_less;
                             if(isNaN(party_less)){
@@ -2231,18 +2172,20 @@
                             if(isNaN(party_discount)){
                                 party_discount = 0;
                             }
+
+                            var per = (sale_rate/100) * party_discount;
                             //console.log(t_pcs);
-                            var amount = parseInt(t_pcs) * parseInt(pur_rate);
-                            var per = amount/100 * party_discount;
-                            var l_rate = pur_rate - (party_less + party_discount);
+
+                            var l_rate = sale_rate - (party_less + per);
                             l_rate = parseFloat(l_rate).toFixed(2);
                             //window.alert(l_rate);
-                            var grand_amount =  parseInt(t_pcs) * l_rate;
-                            $('#rAmount').val(amount);
+
                             $('#rDics').val(data.party_discount);
                             $('#rLess').val(party_less);
                             $('#lRate').val(l_rate);
-                            $('#gAmount').val('0');
+
+                            $('#loader').hide();
+
                         }
                     }
                 },
@@ -2251,7 +2194,7 @@
                 }
             });
         }
-        document.getElementById("pcsPkt").addEventListener("keydown", function(event) {
+        document.getElementById("pcs").addEventListener("keydown", function(event) {
             // Check if the key pressed is Enter
             if (event.key === "Enter") {
                 event.preventDefault(); // Prevent form submission (optional)
@@ -2266,8 +2209,6 @@
             var rbarcode = $('#rbarcode').val();
             var item_code = $('#item_code').val();
             var description = $('#description').val();
-            var pktQty = $('#pktQty').val();
-            var pcsPkt = $('#pcsPkt').val();
             var godown = $('#godown').val() || 0;
             if(godown != 0){
                 var godown_name  = $('#godown option:selected').text();
@@ -2275,8 +2216,8 @@
                 var godown_name  = '-';
             }
             //var godown_name  = $('#godown option:selected').text() || '-';
-            var tPcs = Number($('#tPcs').val()) || 0;
-            var pRate = Number($('#pRate').val()) || 0;
+            var pcs = Number($('#pcs').val()) || 0;
+            var sRate = Number($('#sRate').val()) || 0;
             var rAmount = Number($('#rAmount').val()) || 0;
             var rDics = Number($('#rDics').val()) || 0;
             var rLess = Number($('#rLess').val()) || 0;
@@ -2289,37 +2230,32 @@
             if(margin_hidden === ''){
                 margin_hidden = 0;
             }
-            if(pktQty === ''){
-                pktQty = 0;
-            }
-            if(pcsPkt === ''){
-                pcsPkt = 0;
-            }
+
 
             if(rLess == null || isNaN(rLess)){
                 rLess = 0;
             }
-            gt_less = tPcs * rLess;
+            gt_less = pcs * rLess;
 
             if(isNaN(rDics)){
                 rDics = 0;
             }
-            var rDics_val = pRate/100 * rDics;
+            var rDics_val = sRate/100 * rDics;
             rDics_val = parseFloat(rDics_val).toFixed(2);
             if(rDics_val == null || isNaN(rDics_val)){
                 rDics_val = 0;
             }
 
-            var lRate = pRate - (parseFloat(rLess) + parseFloat(rDics_val));
+            var lRate = sRate - (parseFloat(rLess) + parseFloat(rDics_val));
             lRate = parseFloat(lRate).toFixed(2);
-            gt_disc = tPcs * rDics_val;
-            var t_margin = margin_hidden * tPcs;
+            gt_disc = pcs * rDics_val;
+            var t_margin = margin_hidden * pcs;
             var g_total = gt_less + gt_disc;
 
             var perAgeDis = (g_total/rAmount) *100;
             perAgeDis = perAgeDis.toFixed(2);
 
-            var gAmount = lRate * tPcs;
+            var gAmount = lRate * pcs;
             gAmount = parseFloat(gAmount).toFixed(2);
             var totalRows = document.querySelectorAll('#myTable tr').length;
             //window.alert(rbarcode);
@@ -2334,20 +2270,16 @@
                     /*marin field*/"<input type='hidden' name='invoice_margin_field[]' value='" + ( '') + "' />" +
                     "<input type='hidden' name='item_id[]' value='" + (item_code ?? '') + "' class='item-id' />" +
                     "<input type='hidden' name='invoice_party_less_per_pcs[]' id='itableLess-"+table_id+"' value='" + (rLess ?? '') + "' class='party_less_post' />" +
-                    "<input type='hidden' name='invoice_packet_qty[]' id='itableQty-"+table_id+"' value='" + (pktQty ?? '') + "' class='item-qty' />" +
                     "<input type='hidden' name='invoice_barcode[]' value='" + (rbarcode ?? '') + "' />" +
                     "<input type='hidden' name='invoice_party_item_code[]' value='" + (item_code ?? '') + "' />" +
                     "<input type='hidden' name='invoice_description[]' value='" + (description ?? '') + "' />" +
                     "<input type='hidden' name='invoice_godown[]' value='" + ( godown_name) + "' />" +
-                    "<input type='hidden' name='invoice_pieces_in_packet[]' id='itablePkt-"+table_id+"' value='" + (pcsPkt ?? '') + "' />" +
-                    "<input type='hidden' name='invoice_total_pcs[]'  id='itablePcs-"+table_id+"' value='" + (tPcs ?? '') + "' />" +
-                    "<input type='hidden' name='invoice_purchase_rate[]' id='itablepRate-"+table_id+"' value='" + (pRate ?? '') + "' />" +
+                    "<input type='hidden' name='invoice_total_pcs[]'  id='itablePcs-"+table_id+"' value='" + (pcs ?? '') + "' />" +
+                    "<input type='hidden' name='invoice_purchase_rate[]' id='itablesRate-"+table_id+"' value='" + (sRate ?? '') + "' />" +
                     "<input type='hidden' name='invoice_amount[]' id='itableAmount-"+table_id+"' value='" + (rAmount ?? '') + "' />" +
                     "<input type='hidden' name='invoice_discount_per_pcs[]' id='itableDisc-"+table_id+"' value='" + (rDics_val ?? '') + "' />" +
                     "<input type='hidden' name='invoice_l_rate[]' id='itablelRate-"+table_id+"' value='" + (lRate ?? '') + "' />" +
                     "<input type='hidden' name='invoice_gross_amount[]' id='itablegAmount-"+table_id+"' value='" + (gAmount ?? '') + "' />" +
-                    "<input type='hidden' name='invoice_margin[]' value='" + (margin_hidden ?? '') + "' />" +
-                    "<input type='hidden' name='invoice_total_margin[]' value='" + (t_margin ?? '') + "' />" +
                     "<input type='hidden' name='invoice_total_less[]' id='itableTotalLess-"+table_id+"' value='" + (g_total.toFixed(2) ?? '') + "' />" +
                     "<input type='hidden' name='invoice_total_dis_percent[]' id='itableTotalDisc-"+table_id+"' value='" + (perAgeDis ?? '') + "' />" +
 
@@ -2357,19 +2289,16 @@
                     "<td>" + (item_code ?? '-') + "</td>" +
                     "<td>" + (description ?? '-') + "</td>" +
                     "<td>" + ( godown_name) + "</td>" +
-                    "<td class='pkt_table' contenteditable='true' id='tableQty-"+table_id+"' oninput='tableCalc(this)'>" + (pktQty ?? '-') + "</td>" +
-                    "<td contenteditable='true' id='tablePkt-"+table_id+"' oninput='tableCalc(this)'>" + (pcsPkt ?? '-') + "</td>" +
-                    "<td class='piec_table' id='tablePcs-"+table_id+"'>" + (tPcs ?? '-') + "</td>" +
-                    "<td id='tablepRate-"+table_id+"'>" + (pRate ?? '-') + "</td>" +
+                    "<td class='pcs_table' contenteditable='true' id='pcs-"+table_id+"' oninput='calcPiceses()'>" + (pcs ?? '-') + "</td>" +
+                    "<td id='tablesRate-"+table_id+"'>" + (sRate ?? '-') + "</td>" +
                     "<td class='amount_table' id='tableAmount-"+table_id+"'>" + (rAmount ?? '-') + "</td>" +
-                    "<td class='less_table' contenteditable='true' id='tableLess-"+table_id+"' oninput='tableCalc(this)'>" + (rLess ?? '-') + "</td>" +
-                    "<td class='disc_table' id='tableDisc-"+table_id+"'>" + (rDics_val ?? '-') + "</td>" +
+                    "<td class='less_table' id='tableLess-"+table_id+"'>" + (rLess ?? '-') + "</td>" +
+                    "<td class='disc_table' id='tableDisc-"+table_id+"'>" + (rDics ?? '-') + "</td>" +
                     "<td id='tablelRate-"+table_id+"'>" + (lRate ?? '-') + "</td>" +
                     "<td class='gamount_table' id='tablegAmount-"+table_id+"'>" + (gAmount ?? '-') + "</td>" +
-                    /*margin*/"<td class='tmargin_table'>" +margin_hidden+ "</td>" +
-                    /*total margin*/"<td class='total_margin_table'>" + t_margin + "</td>" +
                     "<td class='total_less_table' id='tableTotalLess-"+table_id+"'>" + (g_total.toFixed(2) ?? '-') + "</td>" +
                     "<td class='total_less_discount' id='tableTotalDisc-"+table_id+"'>" + (perAgeDis ?? '-') + "</td>" +
+
                     "<td><i onclick='deleteItemRow(this)' class='fas fa-trash text-danger del-icon'></i></td>" +
                     "</tr>";
 
@@ -2380,10 +2309,8 @@
                 $('#rbarcode').val('');
                 $('#item_code').val('');
                 $('#description').val('');
-                $('#pktQty').val('');
-                $('#pcsPkt').val('');
-                $('#tPcs').val('');
-                $('#pRate').val('');
+                $('#pcs').val('');
+                $('#sRate').val('');
                 $('#rAmount').val('');
                 $('#rDics').val('');
                 $('#rLess').val('');
@@ -2403,10 +2330,8 @@
             var str = th.id;
             let parts = str.split('-');
             let rowNo = parts[1];
-
             var tableQty = document.getElementById('tableQty-'+rowNo).innerHTML;
             var tableLess = document.getElementById('tableLess-'+rowNo).innerHTML;
-            var tablePkt = document.getElementById('tablePkt-'+rowNo).innerHTML;
             var tablepRate = document.getElementById('tablepRate-'+rowNo).innerHTML;
             var tableDisc = document.getElementById('tableDisc-'+rowNo).innerHTML;
 
@@ -2439,7 +2364,7 @@
             //document.getElementById('tableLess-'+rowNo).innerHTML = tableLess;
             document.getElementById('itableLess-'+rowNo).value = tableLess;
 
-            document.getElementById('tablePcs-'+rowNo).innerHTML = totalPcs;
+            document.getElementById('pcs_table-'+rowNo).innerHTML = totalPcs;
             document.getElementById('itablePcs-'+rowNo).value = totalPcs;
 
             document.getElementById('tableAmount-'+rowNo).innerHTML = amount;
@@ -2517,7 +2442,7 @@
             var pass_type = type;
             //window.alert(pass_type);
             $.ajax({
-                url: "{{ route('ajax.pur_invoice.search') }}",
+                url: "{{ route('ajax.sale_invoice.search') }}",
                 type: 'POST',
                 data: {
                     '_token': "{{ csrf_token() }}",
@@ -2526,10 +2451,10 @@
                 },
                 success: function(response) {
                     //window.alert(response);
-                    //console.log(response);
+                    console.log(response);
                     if (response) {
                         var data = (response);
-                        if (response.comments.length > 0) {
+                        /*if (response.comments.length > 0) {
                             var row = '';
                             var comment_counter = 0;
                             response.comments.forEach(function(c) {
@@ -2551,67 +2476,67 @@
 
                         } else {
                             console.log("No comments found");
-                        }
+                        }*/
                         //console.log(data);
 
                         if (Object.keys(data).length > 0) {
 
-                            if(data.invoice.status === 1){
+                            /*if(data.invoice.status === 1){
                                 disableAllExceptOne('invoice_form', 'bill_no');
                             }else{
                                 enableInvoiceForm('invoice_form');
-                            }
+                            }*/
 
                             $("#invoice_save").text("Update");
                         }else{
                             $("#invoice_save").text("Save");
                         }
                         //window.alert(data.invoice.godown.name);
-                        get_id_party(data.invoice.party_id);
-                        $('#party_id').val(data.invoice.party_id);
-                        $("#party_name")[0].selectize.setValue(data.invoice.party_id);
-                        $('#ud_invoice_id').val(data.invoice.id);
-                        $("#salesman")[0].selectize.setValue(data.invoice.salesman);
-                        $('#current_date').val(data.invoice.date);
-                        $('#bill_no').val(data.invoice.bill_no);
-                        $('#bilty_no').val(data.invoice.bilty_no);
-                        $('#party_inv_no').val(data.invoice.party_inv_no);
-                        $('#vr_no').val(data.invoice.vr_no);
-                        $('#godown').val(data.invoice.godown_id);
-                        $('#party_inv_date').val(data.invoice.party_inv_date);
-                        $('#remarks').val(data.invoice.remarks || '');
-                        $('#total_pkt').val(data.invoice.pkt_qty);
-                        $('#total_piec').val(data.invoice.total_pcs);
-                        $('#total_amount').val(data.invoice.amount);
-                        $('#total_gamount').val(data.invoice.g_amount);
-                        $('#inv_disc_perc').val(data.invoice.inv_disc_perc);
-                        $('#net_amount').val(data.invoice.net_amount);
-                        $('#freight').val(data.invoice.freight);
-                        $('#paid_amount').val(data.invoice.paid_amount);
+                        get_id_party(data.party_id);
+                        $('#party_id').val(data.party_id);
+                        $("#party_name")[0].selectize.setValue(data.party_id);
+                        $('#ud_invoice_id').val(data.id);
+                        $("#salesman")[0].selectize.setValue(data.salesman);
+                        $('#current_date').val(data.date);
+                        $('#bill_no').val(data.bill_no);
+                        $('#bilty_no').val(data.bilty_no);
+                        $('#party_inv_no').val(data.party_inv_no);
+                        $('#vr_no').val(data.vr_no);
+                        $('#godown').val(data.godown_id);
+                        $('#party_inv_date').val(data.party_inv_date);
+                        $('#remarks').val(data.remarks || '');
+                        $('#total_pkt').val(data.pkt_qty);
+                        $('#total_piec').val(data.total_pcs);
+                        $('#total_amount').val(data.amount);
+                        $('#total_gamount').val(data.g_amount);
+                        $('#inv_disc_perc').val(data.inv_disc_perc);
+                        $('#net_amount').val(data.net_amount);
+                        $('#freight').val(data.freight);
+                        $('#paid_amount').val(data.paid_amount);
 
-                        $('#total_amount2').val(data.invoice.total_amount);
-                        $('#cash_amount').val(data.invoice.cash_amount);
-                        $('#cash_remarks').val(data.invoice.cash_remarks);
-                        $('#bank_account_title').val(data.invoice.bank_account_title);
-                        $('#bank_account_number').val(data.invoice.bank_account_number);
-                        $('#bank_amount').val(data.invoice.bank_amount);
-                        $('#bank_remarks').val(data.invoice.bank_remarks);
-                        $('#cheque_bank').val(data.invoice.cheque_bank);
-                        $('#cheque_amount').val(data.invoice.cheque_amount);
-                        $('#cheque_date').val(data.invoice.cheque_date);
-                        $('#cheque_remarks').val(data.invoice.cheque_remarks);
-                        $('#bt_from').val(data.invoice.bt_from);
-                        //$("#bt_to")[0].selectize.setValue(data.invoice.bt_to);
-                        $('#bt_account_title').val(data.invoice.bt_account_title);
-                        $('#bt_account_number').val(data.invoice.bt_account_number);
-                        $('#bt_amount').val(data.invoice.bt_amount);
-                        $('#bt_remarks').val(data.invoice.bt_remarks);
-                        $('#payment_total_amount').val(data.invoice.payment_total_amount);
+                        $('#total_amount2').val(data.total_amount);
+                        $('#cash_amount').val(data.cash_amount);
+                        $('#cash_remarks').val(data.cash_remarks);
+                        $('#bank_account_title').val(data.bank_account_title);
+                        $('#bank_account_number').val(data.bank_account_number);
+                        $('#bank_amount').val(data.bank_amount);
+                        $('#bank_remarks').val(data.bank_remarks);
+                        $('#cheque_bank').val(data.cheque_bank);
+                        $('#cheque_amount').val(data.cheque_amount);
+                        $('#cheque_date').val(data.cheque_date);
+                        $('#cheque_remarks').val(data.cheque_remarks);
+                        $('#bt_from').val(data.bt_from);
+                        //$("#bt_to")[0].selectize.setValue(data.bt_to);
+                        $('#bt_account_title').val(data.bt_account_title);
+                        $('#bt_account_number').val(data.bt_account_number);
+                        $('#bt_amount').val(data.bt_amount);
+                        $('#bt_remarks').val(data.bt_remarks);
+                        $('#payment_total_amount').val(data.payment_total_amount);
 
-                        $('input[name="payment_status"][value="' + data.invoice.payment_status + '"]').prop('checked', true);
-                        //$('#godown').val(data.invoice.godown_id);
+                        $('input[name="payment_status"][value="' + data.payment_status + '"]').prop('checked', true);
+                        //$('#godown').val(data.godown_id);
                         $(".main-table tbody").empty();
-                        var items = data.invoice.item_invoice_lists;
+                        var items = data.sale_invoice_lists;
                         var t_less = 0;
                         var t_disc = 0;
                         var grand_tot = 0;
@@ -2626,8 +2551,8 @@
                             }else{
                                 var dis = row.party_discount;
                             }
-                            if(data.invoice.godown !== null){
-                                var godown = data.invoice.godown.name;
+                            if(data.godown !== null){
+                                var godown = data.godown.name;
                             }else{
                                 var godown = '';
                             }
@@ -2694,7 +2619,7 @@
                                 }else{
                                     var sty = "style='background-color: #FFFFFF;'";
                                 }
-                                //window.alert('in row');
+                                //window.alert(row.sale_rate);
                                 var newRow =
                                     "<tr "+sty+">" +
                                     "<input type='hidden' name='invoice_party_less_total[]' id='tableLess-"+table_id+"' value='" + (row.party_less_total ?? '') + "' />" +
@@ -2727,19 +2652,15 @@
                                     "<td>" + (row.party_item_code ?? '-') + "</td>" +
                                     "<td>" + (row.description ?? '-') + "</td>" +
                                     "<td>" + (row.godown ?? '-') + "</td>" +
-                                    "<td class='pkt_table' contenteditable='true' id='tableQty-"+table_id+"' oninput='tableCalc(this)'>" + (row.packet_qty ?? '-') + "</td>" +
-                                    "<td  contenteditable='true' id='tablePkt-"+table_id+"' oninput='tableCalc(this)'>" + (row.pieces_in_packet ?? '-') + "</td>" +
-                                    "<td class='piec_table' id='tablePcs-"+table_id+"'>" + (row.total_pcs ?? '-') + "</td>" +
-                                    "<td id='tablepRate-"+table_id+"'>" + (row.purchase_rate ?? '-') + "</td>" +
+                                    "<td class='pcs_table' id='tablePcs-"+table_id+"'>" + (row.total_pcs ?? '-') + "</td>" +
+                                    "<td id='tablesRate-"+table_id+"'>" + (row.sale_rate ?? '-') + "</td>" +
                                     "<td class='amount_table'  id='tableAmount-"+table_id+"'>" + (row.amount ?? '-') + "</td>" +
-                                    "<td class='less_table' contenteditable='true' id='tableLess-"+table_id+"' oninput='tableCalc(this)'>" + (row.less_per_pcs ?? '-') + "</td>" +
+                                    "<td class='less_table' id='tableTotalLess-"+table_id+"'>" + (row.less_per_pcs ?? '-') + "</td>" +
                                     "<td class='disc_table'  id='tableDisc-"+table_id+"'>" + (row.discount_per_pcs ?? '-') + "</td>" +
                                     "<td id='tablelRate-"+table_id+"'>" + (row.l_rate ?? '-') + "</td>" +
                                     "<td class='gamount_table' id='tablegAmount-"+table_id+"'>" + (row.gross_amount ?? '-') + "</td>" +
-                                    "<td class='tmargin_table'>" + (row.margin ?? '-') + "</td>" +
-                                    "<td class='total_margin_table'>" + (row.total_margin ?? '-') + "</td>" +
                                     "<td class='total_less_table' id='tableTotalLess-"+table_id+"'>" + (g_total.toFixed(2) ?? '-') + "</td>" +
-                                    "<td class='total_less_discount' id='tableTotalDisc-"+table_id+"'>" + (perAgeDis ?? '-') + "</td>" +
+                                    "<td class='total_disc_table' id='tableTotalDisc-"+table_id+"'>" + (g_total.toFixed(3) ?? '-') + "</td>" +
                                     "<td><i onclick='delete_row(this, "+row_id+", "+pass_value+",  \"" + pass_type + "\")' class='fas fa-trash text-danger del-icon'></i></td>" +
                                     "</tr>";
                                 $(".main-table tbody").append(newRow);
@@ -2776,14 +2697,11 @@
                                     "<td contenteditable='true' id='tableQty-"+table_id+"' oninput='tableCalc(this)'>" + (row.packet_qty ?? '-') + "</td>" +
                                     "<td  contenteditable='true' id='tablePkt-"+table_id+"' oninput='tableCalc(this)'>" + (row.pieces_in_packet ?? '-') + "</td>" +
                                     "<td  id='tablePcs-"+table_id+"'>" + (row.total_pcs ?? '-') + "</td>" +
-                                    "<td id='tablepRate-"+table_id+"'>" + (row.purchase_rate ?? '-') + "</td>" +
                                     "<td   id='tableAmount-"+table_id+"'>" + (row.amount ?? '-') + "</td>" +
                                     "<td  contenteditable='true' id='tableLess-"+table_id+"' oninput='tableCalc(this)'>" + (row.less_per_pcs ?? '-') + "</td>" +
                                     "<td   id='tableDisc-"+table_id+"'>" + (row.discount_per_pcs ?? '-') + "</td>" +
                                     "<td id='tablelRate-"+table_id+"'>" + (row.l_rate ?? '-') + "</td>" +
                                     "<td  id='tablegAmount-"+table_id+"'>" + (row.gross_amount ?? '-') + "</td>" +
-                                    "<td >" + (row.margin ?? '-') + "</td>" +
-                                    "<td >" + (row.total_margin ?? '-') + "</td>" +
                                     "<td  id='tableTotalLess-"+table_id+"'>" + (g_total.toFixed(2) ?? '-') + "</td>" +
                                     "<td  id='tableTotalDisc-"+table_id+"'>" + (perAgeDis ?? '-') + "</td>" +
                                     "<td><i onclick='recover_row(this, "+row_id+", "+pass_value+",  \"" + pass_type + "\")' class='fas fa-trash-restore text-danger del-icon'></i></td>" +
@@ -2800,7 +2718,7 @@
 
 
                         //window.alert(t_less);
-                        /*var t_amount = data.invoice.amount;
+                        /*var t_amount = data.amount;
                         var g_per = (t_disc/t_amount) * 100;
                         $('#total_less').val(t_less);
                         $('#total_disc').val(g_per.toFixed(2) + '% |' +t_disc.toFixed(2));
@@ -2824,7 +2742,7 @@
                         var t_profit = grand_amount/t_amount * 100;
                         $("#total_profit2").val(t_profit.toFixed(3) + "% | " + grand_amount);*/
                         calcTable();
-                        var t_amount = data.invoice.amount;
+                        var t_amount = data.amount;
                         var g_per = (t_disc/t_amount) * 100;
                         $('#total_less').val(t_less);
                         $('#total_disc').val(g_per.toFixed(2) + '% |' +t_disc.toFixed(2));
@@ -2911,7 +2829,7 @@
             $("#invoice_save").attr("disabled", true);
 
             $.ajax({
-                url: "{{ route('purchase.invoice.post') }}",
+                url: "{{ route('sale.invoice.post') }}",
                 method: 'POST',
                 data: formData,
                 contentType: false,
@@ -3053,22 +2971,31 @@
             var name = value;
             //window.alert(value);
             $.ajax({
-                url: "{{ route('ajax.party.search.id') }}",
+                url: "{{ route('sale.party.search.id') }}",
                 type: 'POST',
                 data: {
                     '_token': "{{ csrf_token() }}",
                     value: value,
                 },
                 success: function(response) {
-                    //console.log(response);
+                    console.log(response);
                     if (response) {
                         var data = response;
 
                         if (Object.keys(data).length > 0) {
-                            $('#city').val(data.area.city.name);
-                            $('#address').val(data.address);
-                            $('#area').val(data.area.name);
-                            $('#mobile').val(data.mobile);
+                            $('#city').val(data.party.area.city.name);
+                            $('#address').val(data.party.address);
+                            $('#area').val(data.party.area.name);
+                            $('#mobile').val(data.party.mobile);
+                            //window.alert(data.amounts[0].net_amount);
+                            var net = data.amounts[0].net_amount;
+                            var paid = data.amounts[0].paid_amount;
+                            if(isNaN(paid)){
+                                paid = 0;
+                            }
+                            var previous = net - paid;
+                            $('#previous_balance').val(previous);
+                            $('#total_balance').val(data.amounts.net_amount);
                             //get_areas(data.area_id);
                         }
                     }
@@ -3081,21 +3008,9 @@
         }
 
         function calcTable() {
-            var sum = 0;
-            $('.pkt_table').each(function() {
-                sum += parseFloat($(this).text());
-            });
-            //window.alert(sum);
-            $("#total_pkt").val(sum);
-
             var total_piec = 0;
-            $('.piec_table').each(function() {
+            $('.pcs_table').each(function() {
                 total_piec += parseFloat($(this).text());
-            });
-            ///window.alert(total_piec);
-            var total_margin = 0;
-            $('.total_margin_table').each(function() {
-                total_margin += parseFloat($(this).text());
             });
             //window.alert(total_margin);
             $("#total_piec").val(total_piec);
@@ -3126,14 +3041,6 @@
             });
 
 
-            /*var total_less = 0;
-            $('.less_table').each(function() {
-                var valuu = parseFloat($(this).text());
-                if(isNaN(valuu)){
-                    valuu =0;
-                }
-                total_less += valuu;
-            });*/
 
 
             var sum = 0;
@@ -3145,8 +3052,8 @@
                 let dis = rows[i].querySelector(".disc_table");
                 var dis_text = dis.textContent.trim();
                 if(dis_text != '0.00' || dis_text != 0.00){
-                    let disc_table = rows[i].querySelector(".disc_table").textContent.trim();
-                    let piec_table = rows[i].querySelector(".piec_table").textContent.trim();
+                    let disc_table = parseFloat(document.getElementById("itableDisc-" + i).value) || 0;
+                    let piec_table = rows[i].querySelector(".pcs_table").textContent.trim();
 
                     var t_value = parseFloat(piec_table) * parseFloat(disc_table);
                     let amount = rows[i].querySelector(".amount_table").textContent.trim();
@@ -3160,15 +3067,24 @@
 
                 }else{
                     let less_table = rows[i].querySelector(".less_table").textContent.trim();
-                    let piec_table = rows[i].querySelector(".piec_table").textContent.trim();
+                    let piec_table = rows[i].querySelector(".pcs_table").textContent.trim();
                     var tot_value = parseFloat(piec_table) * parseFloat(less_table);
 
                 }
                 total_less +=parseFloat(tot_value);
 
+                /*if(isNaN()){
+                    var tot_value = 0;
+
+                }else{
+
+                    let piec_table = rows[i].querySelector(".pcs_table").textContent.trim();
+                    var tot_value = parseFloat(piec_table) * parseFloat(less_table);
+                }
+                total_less +=parseFloat(tot_value);*/
+
 
             }
-            $("#total_margin").val(total_margin);
             $("#total_less").val(total_less.toFixed(2));
 
 
@@ -3177,10 +3093,6 @@
             }else{
                 var total_disc = 0;
             }
-
-
-
-
             $("#total_disc").val(total_disc.toFixed(2) + "% |  " + sum.toFixed(2));
             $("#total_gamount").val($("#total_amount").val() - $("#total_less").val());
 
@@ -3193,7 +3105,6 @@
             var freight = parseInt($("#freight").val());
             var inv_disc_perc = parseInt($("#inv_disc_perc").val());
             var paid_amount = parseInt($("#paid_amount").val());
-
             if(isNaN(inv_disc_perc)){
                 inv_disc_perc = 0;
             }
@@ -3226,12 +3137,15 @@
             var t_amount = parseInt($("#total_amount").val());
             var t_am =  parseInt($("#total_less").val()) + sum + inv_disc_perc;
             valuee = t_am/t_amount * 100;
-
+            //window.alert(t_amount);
             $("#total_less2").val(valuee.toFixed(3) + "% | " + t_am);
-            var grand_amount = t_am - freight + total_margin;
-            var t_profit = grand_amount/t_amount * 100;
+            var grand_amount = t_am - freight;
+            var t_profit = (grand_amount/t_amount) * 100;
             $("#total_profit2").val(t_profit.toFixed(3) + "% | " + grand_amount);
-
+            var previous = parseFloat($("#previous_balance").val() || 0);
+            var total_bal = net_amount + previous;
+            $("#total_balance").val(total_bal.toFixed(2));
+            // window.alert("Total Balance: " + total_bal.toFixed(2));
         }
 
         /*function calcTable() {
@@ -3318,8 +3232,7 @@
 
                 let less = rows[i].querySelector(".less_table");
                 var less_text = parseFloat(less.textContent.trim());
-
-                if(isNaN(less_text)){
+           if(isNaN(less_text)){
                     var tot_value = 0;
 
                 }else{
@@ -3443,6 +3356,7 @@
             showPaymentMethod(defaultMethod);
         });
     </script>
+
 @endsection
 
 

@@ -27,6 +27,7 @@
                 id="date"
                 type="date"
                 name="date"
+                value="{{ now()->format('Y-m-d') }}"
                 class="border border-gray-300 w-full transition-all ease-in-out duration-200 focus:border-none focus:outline-indigo-500 px-4 py-1 rounded-md"
                 required
               />
@@ -41,8 +42,12 @@
                 class="selectize-input-sp flex-1"
                 name="search"
                 id="search"
+                onchange="get_id_item(this.value,'id')"
               >
                 <option value="">Search</option>
+                  @foreach($banks as $bank)
+                      <option value="{{ $bank->id }}">{{ $bank->name }}</option>
+                  @endforeach
               </select>
             </div>
             <div class="max-w-[220px]">
@@ -204,6 +209,32 @@
 </div>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{{--
+<script>
+    $(document).ready(function() {
+        $('#search').on('keyup change', function() {
+            let query = $(this).val();
+
+            $.ajax({
+                url: "{{ route('bank.search') }}",
+                type: "GET",
+                data: { query: query },
+                success: function(data) {
+                    $('#search').empty(); // clear old options
+                    $('#search').append('<option value="">Search</option>');
+
+                    data.forEach(function(bank) {
+                        $('#search').append(
+                            `<option value="${bank.id}">${bank.name} - ${bank.account_title}</option>`
+                        );
+                    });
+                }
+            });
+        });
+    });
+</script>
+--}}
+
 <script>
     $(document).ready(function () {
         $('#myForm').on('submit', function (e) {
@@ -220,24 +251,33 @@
 
             $.ajax({
                 type: 'POST',
-                url: '{{route('salesman.create')}}', // Get URL from form's action attribute
+                url: '{{ route("bank.create") }}', // must match the route name exactly
                 data: new FormData(this),
                 contentType: false,
                 processData: false,
                 success: function(response) {
                     $("#submit-btn").attr("disabled", false).text("Save");
-                    //var data = JSON.parse(response);
-                    console.log(response);
-                    toastr.success('Data has submitted!', 'Success', { timeOut: 600, onHidden: 1000 });
-                    // Optionally, reset the form
-                    // $('#myForm')[0].reset();
+                     // console.log(response);
+                    toastr.success('Data has submitted!', 'Success', {
+                        timeOut: 600,
+                        onHidden: function() {
+                            location.reload();
+                        }
+                    });
+                    /*toastr.success('Data has submitted!', 'Success', {
+                        timeOut: 1000, // 1 second
+                        onHidden: function() {
+                        }
+                    });*/
+
                 },
-                error: function(error) {
-                    //console.log({{\Illuminate\Support\Facades\Session::get('error')}})
-                    console.error(error);
-                    alert('An error occurred during submission.');
+                error: function(xhr) {
+                    $("#submit-btn").attr("disabled", false).text("Save");
+                    console.error(xhr.responseText);
+                    alert('Error: ' + xhr.responseText);
                 }
             });
+
             //console.log(formData);
 
 
@@ -248,7 +288,7 @@ function get_id_item(value,type) {
     var name = value;
 
     $.ajax({
-        url: "{{ route('ajax.salesman.search.id') }}",
+        url: "{{ route('ajax.bank.search.id') }}",
         type: 'POST',
         data: {
             '_token': "{{ csrf_token() }}",
@@ -263,11 +303,11 @@ function get_id_item(value,type) {
                 if (Object.keys(data).length > 0) {
 
                     $('#date').val(data.date);
-                    $('#name').val(data.name);
-                    $('#address').val(data.address);
-                    $('#phone').val(data.phone);
-                    $('#recovery').val(data.recovery);
-                    $('#sales').val(data.sales);
+                    $('#b_name').val(data.name);
+                    $('#account_title').val(data.account_title);
+                    $('#balance').val(data.balance);
+                    $('#account_no').val(data.account_no);
+                    $('#remarks').val(data.remarks);
                     $('#salary').val(data.salary);
 
                     if(data.status === 'on'){
@@ -290,6 +330,15 @@ function get_id_item(value,type) {
 
     //  changeBarcode();
 }
+    $(document).ready(function () {
+        var today = new Date();
+        var day = ("0" + today.getDate()).slice(-2);
+        var month = ("0" + (today.getMonth() + 1)).slice(-2);
+        var year = today.getFullYear();
+        var todayDate = year + "-" + month + "-" + day;
+        $('#date').val(todayDate);
+    });
+
 </script>
 @endsection
 
